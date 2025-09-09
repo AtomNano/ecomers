@@ -37,16 +37,36 @@
                 <!-- Profile/Login -->
                 @auth
                     <div class="ml-3 relative">
-                        <div>
-                            <button class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                <span class="sr-only">Open user menu</span>
-                                <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}" alt="">
-                            </button>
-                        </div>
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                <button class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <span class="sr-only">Open user menu</span>
+                                    <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}" alt="">
+                                </button>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('profile.edit')">
+                                    {{ __('Settings') }}
+                                </x-dropdown-link>
+
+                                <!-- Authentication -->
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+
+                                    <x-dropdown-link :href="route('logout')"
+                                            onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
+                                        {{ __('Log Out') }}
+                                    </x-dropdown-link>
+                                </form>
+                            </x-slot>
+                        </x-dropdown>
                     </div>
                 @else
                     <div class="ml-6">
                         <a href="{{ route('login') }}" class="text-gray-500 hover:text-gray-700 text-sm font-medium">Login</a>
+                        <a href="{{ route('register') }}" class="ml-4 text-gray-500 hover:text-gray-700 text-sm font-medium">Register</a>
                     </div>
                 @endauth
             </div>
