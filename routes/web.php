@@ -2,24 +2,33 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Frontend\HomeController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
 use Illuminate\Support\Facades\Route;
 
-// Frontend Routes
+// Frontend Route for guests and customers
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index']); // Common redirect target from middleware
 
-// Authentication Routes
-require __DIR__.'/auth.php';
-
-// Protected Routes
+// --- All authenticated routes ---
 Route::middleware('auth')->group(function () {
-    // User Profile
+    
+    // Profile routes for any authenticated user
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     // Admin Routes
-    Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    });
+
+    // Owner Routes
+    Route::middleware('role:owner')->prefix('owner')->name('owner.')->group(function () {
+        Route::get('/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
     });
 });
+
+
+// Authentication Routes (login, register, etc.)
+require __DIR__.'/auth.php';
