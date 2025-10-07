@@ -1,131 +1,168 @@
 @extends('layouts.frontend.app')
 
 @section('title', 'Tentang Kami - Grosir Berkat Ibu')
+@section('description', 'Pelajari lebih lanjut tentang Grosir Berkat Ibu, platform grosir digital terpercaya dengan sistem harga bertingkat yang fleksibel.')
 
 @section('content')
 <div class="bg-white">
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">Tentang Grosir Berkat Ibu</h1>
-            <p class="mt-4 text-lg text-gray-500">Solusi kebutuhan harian Anda dengan harga grosir terbaik</p>
+    <div class="container-custom section-padding">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <h1 class="text-4xl font-bold text-neutral-900 mb-6">Tentang Grosir Berkat Ibu</h1>
+            <p class="text-xl text-neutral-600 max-w-3xl mx-auto">
+                Platform grosir digital terpercaya yang mentransformasi proses penjualan grosir 
+                dari basis WhatsApp menjadi sistem digital yang terstruktur, otomatis, dan profesional.
+            </p>
         </div>
 
-        <div class="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
-            <!-- Company Info -->
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Informasi Perusahaan</h2>
-                <div class="space-y-6">
-                    <div>
-                        <h3 class="text-lg font-medium text-gray-900">Nama Tempat Grosir</h3>
-                        <p class="mt-1 text-gray-600">Grosir Berkat Ibu</p>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-medium text-gray-900">Lokasi Grosir</h3>
-                        <p class="mt-1 text-gray-600">
-                            Jl. Contoh No. 123<br>
-                            Padang, Sumatera Barat<br>
-                            Indonesia 25111
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-medium text-gray-900">Nomor Telepon</h3>
-                        <p class="mt-1 text-gray-600">+62 812-3456-7890</p>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-medium text-gray-900">Email</h3>
-                        <p class="mt-1 text-gray-600">info@grosirberkatibu.com</p>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-medium text-gray-900">Jam Operasional</h3>
-                        <p class="mt-1 text-gray-600">
-                            Senin - Jumat: 08:00 - 17:00<br>
-                            Sabtu: 08:00 - 15:00<br>
-                            Minggu: Tutup
-                        </p>
-                    </div>
+        <!-- Mission & Vision -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            <div class="card p-8">
+                <div class="w-16 h-16 bg-primary-600 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
                 </div>
+                <h2 class="text-2xl font-bold text-neutral-900 mb-4">Misi Kami</h2>
+                <p class="text-neutral-600 leading-relaxed">
+                    Menyediakan platform grosir digital yang memudahkan pelanggan untuk mendapatkan 
+                    produk berkualitas dengan harga terbaik melalui sistem harga bertingkat yang fleksibel, 
+                    transaksi yang aman, dan pengiriman yang cepat.
+                </p>
             </div>
 
-            <!-- Map -->
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Lokasi Kami</h2>
-                <div class="bg-gray-200 rounded-lg h-96 flex items-center justify-center">
-                    <div class="text-center">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <p class="mt-2 text-sm text-gray-500">Peta Lokasi</p>
-                        <p class="text-xs text-gray-400">Integrasikan dengan Google Maps</p>
-                    </div>
+            <div class="card p-8">
+                <div class="w-16 h-16 bg-primary-600 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
                 </div>
-            </div>
-        </div>
-
-        <!-- About Us -->
-        <div class="mt-16">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Tentang Kami</h2>
-            <div class="prose prose-lg text-gray-600 max-w-none">
-                <p>
-                    Grosir Berkat Ibu adalah toko grosir yang telah melayani kebutuhan harian masyarakat Padang dan sekitarnya 
-                    selama bertahun-tahun. Kami berkomitmen untuk menyediakan produk berkualitas dengan harga grosir yang terjangkau.
-                </p>
-                <p>
-                    Dengan pengalaman yang luas dalam bidang grosir, kami memahami kebutuhan pelanggan dan selalu berusaha 
-                    memberikan pelayanan terbaik. Produk-produk yang kami tawarkan meliputi berbagai kebutuhan sehari-hari 
-                    dengan kualitas terjamin dan harga yang kompetitif.
-                </p>
-                <p>
-                    Visi kami adalah menjadi grosir terpercaya yang dapat diandalkan oleh masyarakat untuk memenuhi 
-                    kebutuhan harian mereka. Misi kami adalah menyediakan produk berkualitas dengan harga terjangkau 
-                    dan pelayanan yang memuaskan.
+                <h2 class="text-2xl font-bold text-neutral-900 mb-4">Visi Kami</h2>
+                <p class="text-neutral-600 leading-relaxed">
+                    Menjadi platform grosir digital terdepan di Indonesia yang dikenal karena 
+                    inovasi sistem harga bertingkat, kualitas produk terjamin, dan layanan 
+                    pelanggan yang excellent.
                 </p>
             </div>
         </div>
 
-        <!-- Services -->
-        <div class="mt-16">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Layanan Kami</h2>
-            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Our Story -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 text-center mb-12">Cerita Kami</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="prose prose-lg max-w-none">
+                    <p class="text-neutral-600 leading-relaxed mb-6">
+                        Grosir Berkat Ibu lahir dari kebutuhan untuk mentransformasi bisnis grosir tradisional 
+                        yang masih mengandalkan WhatsApp dan komunikasi manual menjadi platform digital yang 
+                        terstruktur dan profesional.
+                    </p>
+                    <p class="text-neutral-600 leading-relaxed mb-6">
+                        Kami memahami tantangan yang dihadapi oleh pelaku bisnis grosir dalam mengelola 
+                        harga yang berbeda untuk berbagai tingkat pembelian, mengatur stok, dan melayani 
+                        pelanggan dengan efisien. Oleh karena itu, kami mengembangkan sistem harga bertingkat 
+                        yang dinamis dan mudah dikelola.
+                    </p>
+                    <p class="text-neutral-600 leading-relaxed">
+                        Dengan pengalaman bertahun-tahun di industri grosir, tim kami berkomitmen untuk 
+                        memberikan solusi terbaik yang memudahkan pelanggan mendapatkan produk berkualitas 
+                        dengan harga yang kompetitif.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Values -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 text-center mb-12">Nilai-Nilai Kami</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="text-center">
-                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-4 text-lg font-medium text-gray-900">Harga Grosir</h3>
-                    <p class="mt-2 text-gray-600">Harga terbaik untuk pembelian dalam jumlah besar</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Kualitas</h3>
+                    <p class="text-neutral-600">Produk berkualitas tinggi dengan standar internasional</p>
                 </div>
-                
+
                 <div class="text-center">
-                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-4 text-lg font-medium text-gray-900">Kualitas Terjamin</h3>
-                    <p class="mt-2 text-gray-600">Produk berkualitas tinggi dengan standar terbaik</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Transparansi</h3>
+                    <p class="text-neutral-600">Harga yang transparan dan sistem yang jelas</p>
                 </div>
-                
+
                 <div class="text-center">
-                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-4 text-lg font-medium text-gray-900">Pelayanan 24/7</h3>
-                    <p class="mt-2 text-gray-600">Customer service siap membantu kapan saja</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Kepercayaan</h3>
+                    <p class="text-neutral-600">Membangun kepercayaan melalui layanan yang konsisten</p>
                 </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Inovasi</h3>
+                    <p class="text-neutral-600">Terus berinovasi untuk memberikan solusi terbaik</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-neutral-900 text-center mb-12">Tim Kami</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-primary-600">BI</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Tim Development</h3>
+                    <p class="text-neutral-600">Mengembangkan platform yang user-friendly dan reliable</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-primary-600">CS</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Customer Service</h3>
+                    <p class="text-neutral-600">Melayani pelanggan dengan profesional dan responsif</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-primary-600">LG</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Logistics</h3>
+                    <p class="text-neutral-600">Memastikan pengiriman tepat waktu dan aman</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="bg-primary-50 rounded-2xl p-8 text-center">
+            <h2 class="text-2xl font-bold text-neutral-900 mb-4">Bergabunglah dengan Kami</h2>
+            <p class="text-neutral-600 mb-6 max-w-2xl mx-auto">
+                Dapatkan akses ke ribuan produk berkualitas dengan sistem harga bertingkat yang menguntungkan
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ route('register') }}" class="btn-primary text-lg px-8 py-4">
+                    Daftar Sekarang
+                </a>
+                <a href="{{ route('contact') }}" class="btn-outline text-lg px-8 py-4">
+                    Hubungi Kami
+                </a>
             </div>
         </div>
     </div>
 </div>
 @endsection
-
-
-
-

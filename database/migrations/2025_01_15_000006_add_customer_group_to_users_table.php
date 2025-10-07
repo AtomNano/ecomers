@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('customer'); // admin, customer, owner
+            $table->foreignUuid('customer_group_id')->nullable()->after('role')->constrained('customer_groups')->onDelete('set null');
         });
     }
 
@@ -22,7 +22,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            $table->dropForeign(['customer_group_id']);
+            $table->dropColumn('customer_group_id');
         });
     }
 };
