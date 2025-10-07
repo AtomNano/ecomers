@@ -21,6 +21,11 @@ class UserSeeder extends Seeder
                 'name' => 'Owner User',
                 'password' => Hash::make('password'),
                 'role' => User::ROLE_OWNER,
+                'address' => '123 Owner St',
+                'phone_number' => '1234567890',
+                'province' => 'Province',
+                'city' => 'City',
+                'district' => 'District',
             ]
         );
 
@@ -31,17 +36,15 @@ class UserSeeder extends Seeder
                 'name' => 'Admin User',
                 'password' => Hash::make('password'),
                 'role' => User::ROLE_ADMIN,
+                'address' => '456 Admin St',
+                'phone_number' => '0987654321',
+                'province' => 'Province',
+                'city' => 'City',
+                'district' => 'District',
             ]
         );
 
-        // Create Customer
-        User::firstOrCreate(
-            ['email' => 'customer@example.com'],
-            [
-                'name' => 'Customer User',
-                'password' => Hash::make('password'),
-                'role' => User::ROLE_CUSTOMER,
-            ]
-        );
+        // Create Customers
+        User::factory()->count(8)->create();
     }
 }

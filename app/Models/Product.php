@@ -15,8 +15,13 @@ class Product extends Model
         'name',
         'slug',
         'description',
-        'price',
+        'image',
+        'price_per_piece',
+        'price_per_four',
+        'price_per_dozen',
         'stock',
+        'is_featured',
+        'sales_count',
         'category_id'
     ];
 

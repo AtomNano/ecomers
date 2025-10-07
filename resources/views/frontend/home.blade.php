@@ -1,90 +1,88 @@
-@extends('layouts.frontend.app')
+ @extends('layouts.frontend.app')
 
-@section('title', 'Welcome to EStore')
+ @section('title', 'Selamat Datang di Grosir Berkat Ibu')
 
-@section('content')
-    <!-- Hero Section -->
-    <div class="relative bg-white overflow-hidden">
-        <div class="max-w-7xl mx-auto">
-            <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-                <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-                    <div class="sm:text-center lg:text-left">
-                        <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                            <span class="block">Your One-Stop</span>
-                            <span class="block text-indigo-600">Online Shop</span>
-                        </h1>
-                        <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                            Discover amazing products at the best prices. Shop with confidence and enjoy our fast delivery service.
-                        </p>
-                        <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                            <div class="rounded-md shadow">
-                                <a href="#" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
-                                    Shop Now
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+ @section('content')
+<div class="bg-white">
+    <main>
+        <!-- Hero -->
+        <div class="bg-indigo-700">
+            <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">Grosir Berkat Ibu</h1>
+                <p class="mt-4 text-xl text-indigo-200">Solusi Kebutuhan Harian Anda dengan Harga Grosir</p>
+                <a href="{{ route('products.index') }}" class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto">
+                    Belanja Sekarang
+                </a>
             </div>
         </div>
-        <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-            <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80" alt="">
-        </div>
-    </div>
 
-    <!-- Featured Products -->
-    <div class="bg-white">
-        <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Featured Products</h2>
-            <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                <!-- Product 1 -->
-                <div class="group relative">
-                    <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
-                        <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg" class="w-full h-full object-center object-cover">
-                    </div>
-                    <div class="mt-4 flex justify-between">
-                        <div>
-                            <h3 class="text-sm text-gray-700">
-                                <a href="#">Product 1</a>
-                            </h3>
-                            <p class="mt-1 text-sm text-gray-500">Black</p>
-                        </div>
-                        <p class="text-sm font-medium text-gray-900">$35</p>
-                    </div>
+        <!-- Featured Products -->
+        <section aria-labelledby="trending-heading" class="bg-white">
+            <div class="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-32 lg:px-8">
+                <div class="px-4 flex items-center justify-between sm:px-6 lg:px-0">
+                    <h2 id="trending-heading" class="text-2xl font-extrabold tracking-tight text-gray-900">Barang Terlaris</h2>
                 </div>
 
-                <!-- Product 2 -->
-                <div class="group relative">
-                    <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
-                        <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-02.jpg" class="w-full h-full object-center object-cover">
-                    </div>
-                    <div class="mt-4 flex justify-between">
-                        <div>
-                            <h3 class="text-sm text-gray-700">
-                                <a href="#">Product 2</a>
-                            </h3>
-                            <p class="mt-1 text-sm text-gray-500">White</p>
+                <div class="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+                    @foreach ($featuredProducts as $product)
+                    <div class="relative">
+                        <div class="relative w-full h-72 rounded-lg overflow-hidden">
+                            <img src="{{ $product->image ? asset('storage/products/' . $product->image) : 'https://placehold.co/400x400/f3f4f6/374151?text=Produk' }}" alt="{{ $product->name }}" class="w-full h-full object-center object-cover">
                         </div>
-                        <p class="text-sm font-medium text-gray-900">$45</p>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="group relative">
-                    <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
-                        <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-03.jpg" class="w-full h-full object-center object-cover">
-                    </div>
-                    <div class="mt-4 flex justify-between">
-                        <div>
-                            <h3 class="text-sm text-gray-700">
-                                <a href="#">Product 3</a>
-                            </h3>
-                            <p class="mt-1 text-sm text-gray-500">Gray</p>
+                        <div class="relative mt-4">
+                            <h3 class="text-sm font-medium text-gray-900">{{ $product->name }}</h3>
+                            <p class="mt-1 text-sm text-gray-500">{{ $product->category->name }}</p>
                         </div>
-                        <p class="text-sm font-medium text-gray-900">$40</p>
+                        <div class="absolute top-0 inset-x-0 h-72 rounded-lg p-4 flex items-end justify-end overflow-hidden">
+                            <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50"></div>
+                            <p class="relative text-lg font-semibold text-white">Rp {{ number_format($product->price_per_piece, 0, ',', '.') }}</p>
+                        </div>
                     </div>
+                    @endforeach
                 </div>
             </div>
-        </div>
-    </div>
-@endsection
+        </section>
+
+        <!-- Newest Products -->
+        <section aria-labelledby="new-heading" class="bg-gray-50">
+            <div class="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-32 lg:px-8">
+                <div class="px-4 flex items-center justify-between sm:px-6 lg:px-0">
+                    <h2 id="new-heading" class="text-2xl font-extrabold tracking-tight text-gray-900">Barang Terbaru</h2>
+                </div>
+
+                <div class="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+                     {{-- Loop for newest products --}}
+                    @foreach ($newestProducts as $product)
+                    <div class="relative">
+                        <div class="relative w-full h-72 rounded-lg overflow-hidden">
+                            <img src="{{ $product->image ? asset('storage/products/' . $product->image) : 'https://placehold.co/400x400/e5e7eb/4b5563?text=Produk' }}" alt="{{ $product->name }}" class="w-full h-full object-center object-cover">
+                        </div>
+                        <div class="relative mt-4">
+                            <h3 class="text-sm font-medium text-gray-900">{{ $product->name }}</h3>
+                            <p class="mt-1 text-sm text-gray-500">{{ $product->category->name }}</p>
+                        </div>
+                        <div class="absolute top-0 inset-x-0 h-72 rounded-lg p-4 flex items-end justify-end overflow-hidden">
+                            <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50"></div>
+                            <p class="relative text-lg font-semibold text-white">Rp {{ number_format($product->price_per_piece, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+        
+        <!-- Location Section -->
+        <section aria-labelledby="location-heading" class="bg-white">
+            <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900" id="location-heading">Lokasi Kami</h2>
+                    <p class="mt-4 text-lg text-gray-500">Kunjungi toko fisik kami di Padang, Sumatera Barat.</p>
+                    <div class="mt-8">
+                                             </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+ @endsection
