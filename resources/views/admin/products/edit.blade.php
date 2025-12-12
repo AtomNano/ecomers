@@ -1,340 +1,221 @@
 @extends('layouts.admin.app')
 
 @section('title', 'Edit Produk - ' . $product->name)
-@section('page-title', 'Edit Produk')
-@section('page-description', 'Ubah informasi produk dan sistem harga bertingkat')
 
 @section('content')
-<form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" x-data="productForm({{ json_encode($product->tierPrices) }})">
-    @csrf
-    @method('PUT')
+<div x-data="productForm()" class="max-w-5xl mx-auto">
     
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main Form -->
-        <div class="lg:col-span-2 space-y-6">
-            <!-- Basic Information -->
-            <div class="card p-6">
-                <h3 class="text-lg font-semibold text-neutral-900 mb-4">Informasi Dasar</h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-neutral-700 mb-2">Nama Produk *</label>
-                        <input 
-                            type="text" 
-                            name="name" 
-                            value="{{ old('name', $product->name) }}"
-                            class="input-field @error('name') border-red-500 @enderror"
-                            placeholder="Masukkan nama produk"
-                            required
-                        >
-                        @error('name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
 
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-neutral-700 mb-2">Deskripsi</label>
-                        <textarea 
-                            name="description" 
-                            rows="4"
-                            class="input-field @error('description') border-red-500 @enderror"
-                            placeholder="Deskripsi produk"
-                        >{{ old('description', $product->description) }}</textarea>
-                        @error('description')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-700 mb-2">Kategori *</label>
-                        <select 
-                            name="category_id" 
-                            class="input-field @error('category_id') border-red-500 @enderror"
-                            required
-                        >
-                            <option value="">Pilih Kategori</option>
-                            @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                        @error('category_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-700 mb-2">Stok *</label>
-                        <input 
-                            type="number" 
-                            name="stock" 
-                            value="{{ old('stock', $product->stock) }}"
-                            min="0"
-                            class="input-field @error('stock') border-red-500 @enderror"
-                            required
-                        >
-                        @error('stock')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            <div>
+                <a href="{{ route('admin.products.index') }}" class="mb-6 flex items-center text-slate-500 hover:text-primary-600 transition-colors gap-2 text-sm font-medium group">
+                    <i class="ph-bold ph-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                    Kembali ke Daftar Produk
+                </a>
+                <h1 class="text-3xl font-bold text-slate-800">Edit Produk</h1>
+                <p class="text-slate-500 mt-1">Ubah detail untuk <span class="font-semibold text-slate-700">{{ $product->name }}</span></p>
             </div>
+        </div>
 
-            <!-- Pricing System -->
-            <div class="card p-6">
-                <h3 class="text-lg font-semibold text-neutral-900 mb-4">Sistem Harga Bertingkat</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Form -->
+            <div class="lg:col-span-2 space-y-8">
                 
-                <div class="space-y-6">
-                    <!-- Basic Pricing -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700 mb-2">Harga Eceran *</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500">Rp</span>
-                                <input 
-                                    type="number" 
-                                    name="price_per_piece" 
-                                    value="{{ old('price_per_piece', $product->price_per_piece) }}"
-                                    min="0"
-                                    step="100"
-                                    class="input-field pl-10 @error('price_per_piece') border-red-500 @enderror"
-                                    placeholder="0"
-                                    required
-                                >
-                            </div>
-                            @error('price_per_piece')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                <!-- Card: Basic Info -->
+                <div class="bg-white p-8 rounded-2xl shadow-soft border border-slate-100">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i class="ph-duotone ph-info text-primary-500 text-xl"></i>
+                        Informasi Dasar
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div class="input-group">
+                            <label for="name" class="block text-sm font-semibold text-slate-700 mb-2">Nama Produk <span class="text-red-500">*</span></label>
+                            <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" required placeholder="Contoh: Kopi Robusta Premium" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all outline-none @error('name') border-red-500 @enderror">
+                            @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700 mb-2">Harga 4+ (Opsional)</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500">Rp</span>
-                                <input 
-                                    type="number" 
-                                    name="price_per_four" 
-                                    value="{{ old('price_per_four', $product->price_per_four) }}"
-                                    min="0"
-                                    step="100"
-                                    class="input-field pl-10 @error('price_per_four') border-red-500 @enderror"
-                                    placeholder="0"
-                                >
-                            </div>
-                            @error('price_per_four')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700 mb-2">Harga Lusin (Opsional)</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500">Rp</span>
-                                <input 
-                                    type="number" 
-                                    name="price_per_dozen" 
-                                    value="{{ old('price_per_dozen', $product->price_per_dozen) }}"
-                                    min="0"
-                                    step="100"
-                                    class="input-field pl-10 @error('price_per_dozen') border-red-500 @enderror"
-                                    placeholder="0"
-                                >
-                            </div>
-                            @error('price_per_dozen')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Advanced Tier Pricing -->
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h4 class="text-md font-medium text-neutral-900">Harga Bertingkat Lanjutan</h4>
-                            <button 
-                                type="button" 
-                                @click="addTierPrice()"
-                                class="btn-outline text-sm"
-                            >
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                Tambah Tingkat Harga
-                            </button>
-                        </div>
-                        
-                        <div class="space-y-3" x-ref="tierPrices">
-                            <template x-for="(tier, index) in tierPrices" :key="index">
-                                <div class="flex items-center space-x-3 p-3 bg-neutral-50 rounded-lg">
-                                    <div class="flex-1">
-                                        <input 
-                                            type="text" 
-                                            x-model="tier.tier_name"
-                                            placeholder="Nama Tingkat (e.g., Grosir, Kartonan)"
-                                            class="input-field text-sm"
-                                        >
-                                    </div>
-                                    <div class="w-24">
-                                        <input 
-                                            type="number" 
-                                            x-model="tier.min_quantity"
-                                            placeholder="Min Qty"
-                                            min="1"
-                                            class="input-field text-sm"
-                                        >
-                                    </div>
-                                    <div class="w-32">
-                                        <div class="relative">
-                                            <span class="absolute left-2 top-1/2 transform -translate-y-1/2 text-xs text-neutral-500">Rp</span>
-                                            <input 
-                                                type="number" 
-                                                x-model="tier.price"
-                                                placeholder="Harga"
-                                                min="0"
-                                                step="100"
-                                                class="input-field text-sm pl-8"
-                                            >
-                                        </div>
-                                    </div>
-                                    <button 
-                                        type="button" 
-                                        @click="removeTierPrice(index)"
-                                        class="p-2 text-red-600 hover:text-red-800 transition-colors"
-                                    >
-                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                    </button>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="input-group">
+                                <label for="category_id" class="block text-sm font-semibold text-slate-700 mb-2">Kategori</label>
+                                <div class="relative">
+                                    <select id="category_id" name="category_id" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl appearance-none focus:bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all outline-none cursor-pointer @error('category_id') border-red-500 @enderror">
+                                        <option value="">Pilih Kategori...</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <i class="ph-bold ph-caret-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
                                 </div>
-                            </template>
+                                @error('category_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="input-group">
+                                <label for="stock" class="block text-sm font-semibold text-slate-700 mb-2">Stok</label>
+                                <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all outline-none @error('stock') border-red-500 @enderror">
+                                @error('stock') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="description" class="block text-sm font-semibold text-slate-700 mb-2">Deskripsi</label>
+                            <textarea id="description" name="description" rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all outline-none placeholder:text-slate-400 @error('description') border-red-500 @enderror" placeholder="Jelaskan detail produk...">{{ old('description', $product->description) }}</textarea>
+                            @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: Pricing Strategy -->
+                <div class="bg-white p-8 rounded-2xl shadow-soft border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-50 to-transparent rounded-bl-full opacity-50 pointer-events-none"></div>
+
+                    <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i class="ph-duotone ph-currency-dollar text-emerald-500 text-xl"></i>
+                        Strategi Harga
+                    </h3>
+
+                    <div class="space-y-6">
+                        <div class="input-group">
+                            <label for="price_per_piece" class="block text-sm font-semibold text-slate-700 mb-2">Harga Eceran (Satuan)</label>
+                            <div class="relative group">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium group-focus-within:text-primary-600 transition-colors">Rp</span>
+                                <input type="number" id="price_per_piece" name="price_per_piece" value="{{ old('price_per_piece', $product->price_per_piece) }}" placeholder="0" class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all outline-none font-semibold text-slate-800 @error('price_per_piece') border-red-500 @enderror">
+                            </div>
+                            @error('price_per_piece') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800">Harga Grosir (Bertingkat)</h4>
+                                    <p class="text-xs text-slate-500 mt-1">Atur harga lebih murah untuk pembelian banyak.</p>
+                                </div>
+                                <button type="button" @click="addTier()" class="px-3 py-1.5 bg-primary-50 text-primary-600 text-xs font-bold rounded-lg hover:bg-primary-100 transition-colors flex items-center gap-1">
+                                    <i class="ph-bold ph-plus"></i> Tambah Level
+                                </button>
+                            </div>
+
+                            <div class="space-y-3">
+                                <template x-for="(tier, index) in tierPrices" :key="index">
+                                    <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 group hover:border-primary-200 hover:shadow-sm transition-all">
+                                        <div class="flex-1">
+                                            <input type="text" :name="`tier_prices[${index}][tier_name]`" x-model="tier.tier_name" placeholder="Nama (ex: Lusin)" class="w-full bg-transparent border-none p-0 text-sm focus:ring-0 placeholder:text-slate-400 font-medium text-slate-700">
+                                        </div>
+                                        <div class="w-24">
+                                            <input type="number" :name="`tier_prices[${index}][min_quantity]`" x-model="tier.min_quantity" placeholder="Min Qty" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-center">
+                                        </div>
+                                        <div class="w-32 relative">
+                                            <span class="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-slate-400">Rp</span>
+                                            <input type="number" :name="`tier_prices[${index}][price]`" x-model="tier.price" placeholder="Harga" class="w-full bg-white border border-slate-200 rounded-lg pl-6 pr-2 py-1.5 text-xs focus:ring-1 focus:ring-primary-500 focus:border-primary-500 font-semibold">
+                                        </div>
+                                        <button type="button" @click="removeTier(index)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                            <i class="ph-bold ph-x"></i>
+                                        </button>
+                                    </div>
+                                </template>
+                                <div x-show="tierPrices.length === 0" class="text-center py-6 border-2 border-dashed border-slate-200 rounded-xl">
+                                    <p class="text-xs text-slate-400">Belum ada harga grosir diatur.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Product Settings -->
-            <div class="card p-6">
-                <h3 class="text-lg font-semibold text-neutral-900 mb-4">Pengaturan Produk</h3>
-                
-                <div class="space-y-4">
-                    <label class="flex items-center">
-                        <input 
-                            type="checkbox" 
-                            name="is_featured" 
-                            value="1"
-                            {{ old('is_featured', $product->is_featured) ? 'checked' : '' }}
-                            class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded"
-                        >
-                        <span class="ml-2 text-sm text-neutral-700">Tandai sebagai produk unggulan</span>
-                    </label>
-                </div>
-            </div>
-        </div>
+            <!-- Right Column: Media & Publish -->
+            <div class="space-y-8">
+                <!-- Publish Action -->
+                <div class="bg-white p-6 rounded-2xl shadow-soft border border-slate-100 sticky top-24">
+                    <h3 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider">Aksi</h3>
+                    
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
+                        <label for="is_featured" class="text-sm font-medium text-slate-700">Jadikan Unggulan</label>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }} class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-200 ease-in-out checked:translate-x-full checked:border-primary-500"/>
+                            <label for="is_featured" class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer"></label>
+                        </div>
+                    </div>
 
-        <!-- Sidebar -->
-        <div class="space-y-6">
-            <!-- Current Image -->
-            <div class="card p-6">
-                <h3 class="text-lg font-semibold text-neutral-900 mb-4">Gambar Saat Ini</h3>
-                
-                @if($product->image)
-                <div class="mb-4">
-                    <img 
-                        src="{{ asset('storage/products/' . $product->image) }}" 
-                        alt="{{ $product->name }}"
-                        class="w-full h-48 object-cover rounded-lg"
-                    >
+                    <div class="flex flex-col gap-3">
+                        <button type="submit" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold shadow-lg shadow-primary-500/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
+                            Simpan Perubahan
+                        </button>
+                        <a href="{{ route('admin.products.index') }}" class="w-full py-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl font-semibold transition-colors text-center">
+                            Batal
+                        </a>
+                    </div>
                 </div>
-                @endif
-                
-                <div class="space-y-4">
-                    <div class="border-2 border-dashed border-neutral-300 rounded-lg p-6 text-center">
-                        <input 
-                            type="file" 
-                            name="image" 
-                            id="image"
-                            accept="image/*"
-                            class="hidden"
-                            @change="handleImageUpload"
-                        >
-                        <label for="image" class="cursor-pointer">
-                            <svg class="h-12 w-12 text-neutral-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            <p class="text-sm text-neutral-600">Klik untuk ganti gambar</p>
-                            <p class="text-xs text-neutral-500 mt-1">PNG, JPG, JPEG (Max 2MB)</p>
-                        </label>
+
+                <!-- Image Upload -->
+                <div class="bg-white p-6 rounded-2xl shadow-soft border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider">Gambar Produk</h3>
+                    
+                    <div class="relative w-full aspect-square bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer group hover:border-primary-500 hover:bg-primary-50/50 transition-all overflow-hidden" @click="$refs.fileInput.click()">
+                        
+                        <div x-show="!imagePreview" class="text-center p-6 transition-transform group-hover:scale-105">
+                            <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center mx-auto mb-3 text-slate-400 group-hover:text-primary-500">
+                                <i class="ph-duotone ph-image text-2xl"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-600">Klik untuk Ganti</p>
+                            <p class="text-[10px] text-slate-400 mt-1">PNG, JPG (Maks. 2MB)</p>
+                        </div>
+
+                        <img x-show="imagePreview" :src="imagePreview" class="absolute inset-0 w-full h-full object-cover">
+                        
+                        <div x-show="imagePreview" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <p class="text-white text-sm font-medium"><i class="ph-bold ph-pencil"></i> Ganti Gambar</p>
+                        </div>
+
+                        <input type="file" name="image" x-ref="fileInput" class="hidden" @change="handleImageUpload">
                     </div>
                     
-                    <div x-show="imagePreview" class="mt-4">
-                        <img :src="imagePreview" alt="Preview" class="w-full h-48 object-cover rounded-lg">
-                    </div>
-                    
-                    @error('image')
-                    <p class="text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="card p-6">
-                <h3 class="text-lg font-semibold text-neutral-900 mb-4">Aksi</h3>
-                
-                <div class="space-y-3">
-                    <button type="submit" class="btn-primary w-full">
-                        <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Simpan Perubahan
+                    <button type="button" x-show="imagePreview && '{{ $product->image }}'" @click.stop="removeImage" class="mt-3 w-full py-2 text-xs font-bold text-red-500 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center gap-1">
+                        <i class="ph-bold ph-trash"></i> Hapus Gambar Saat Ini
                     </button>
-                    
-                    <a href="{{ route('admin.products.show', $product) }}" class="btn-outline w-full text-center">
-                        Lihat Detail
-                    </a>
-                    
-                    <a href="{{ route('admin.products.index') }}" class="btn-outline w-full text-center">
-                        Batal
-                    </a>
+                    @error('image') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <input type="hidden" name="remove_image" x-model="removeImageFlag">
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Hidden inputs for tier prices -->
-    <template x-for="(tier, index) in tierPrices" :key="index">
-        <input type="hidden" :name="`tier_prices[${index}][tier_name]`" :value="tier.tier_name">
-        <input type="hidden" :name="`tier_prices[${index}][min_quantity]`" :value="tier.min_quantity">
-        <input type="hidden" :name="`tier_prices[${index}][price]`" :value="tier.price">
-    </template>
-</form>
+    </form>
+</div>
 
 <script>
-function productForm(existingTierPrices = []) {
+function productForm() {
     return {
-        tierPrices: existingTierPrices.length > 0 ? existingTierPrices : [],
-        imagePreview: null,
-        
-        addTierPrice() {
-            this.tierPrices.push({
-                tier_name: '',
-                min_quantity: 1,
-                price: 0
-            });
+        tierPrices: @json(old('tier_prices', $product->tierPrices)),
+        imagePreview: '{{ $product->image ? asset('storage/products/' . $product->image) : '' }}',
+        removeImageFlag: false,
+
+        addTier() {
+            this.tierPrices.push({ tier_name: '', min_quantity: 1, price: 0 });
         },
-        
-        removeTierPrice(index) {
+
+        removeTier(index) {
             this.tierPrices.splice(index, 1);
         },
-        
+
         handleImageUpload(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.imagePreview = e.target.result;
+                    this.removeImageFlag = false;
                 };
                 reader.readAsDataURL(file);
             }
+        },
+
+        removeImage() {
+            this.imagePreview = null;
+            this.removeImageFlag = true;
+            this.$refs.fileInput.value = '';
         }
     }
 }

@@ -79,6 +79,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:owner')->prefix('owner')->name('owner.')->group(function () {
         Route::get('/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
         Route::resource('customers', OwnerCustomerController::class);
+        Route::resource('admins', \App\Http\Controllers\Owner\AdminController::class);
+        Route::post('admins/{admin}/reset-password', [\App\Http\Controllers\Owner\AdminController::class, 'resetPassword'])->name('admins.reset-password');
+        Route::get('reports', [\App\Http\Controllers\Owner\ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/sales', [\App\Http\Controllers\Owner\ReportController::class, 'sales'])->name('reports.sales');
+        Route::get('reports/products', [\App\Http\Controllers\Owner\ReportController::class, 'products'])->name('reports.products');
+        Route::get('reports/customers', [\App\Http\Controllers\Owner\ReportController::class, 'customers'])->name('reports.customers');
     });
 });
 

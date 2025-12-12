@@ -1,249 +1,323 @@
 @extends('layouts.admin.app')
 
 @section('title', 'Dashboard Owner - Grosir Berkat Ibu')
-@section('page-title', 'Dashboard Owner')
-@section('page-description', 'Ringkasan bisnis dan manajemen sistem')
 
 @section('content')
-<!-- Stats Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <!-- Total Revenue -->
-    <div class="card p-6">
-        <div class="flex items-center">
-            <div class="flex-shrink-0">
-                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-neutral-600">Total Pendapatan</p>
-                <p class="text-2xl font-bold text-neutral-900">Rp {{ number_format($stats['total_revenue'] ?? 0) }}</p>
-                <p class="text-xs text-green-600">+12% dari bulan lalu</p>
-            </div>
-        </div>
+<div class="p-6">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-neutral-900">Dashboard Owner</h1>
+        <p class="text-neutral-600 mt-2">Selamat datang di panel owner Grosir Berkat Ibu</p>
     </div>
 
-    <!-- Total Customers -->
-    <div class="card p-6">
-        <div class="flex items-center">
-            <div class="flex-shrink-0">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- Statistik Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Pelanggan -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-neutral-600">Total Pelanggan</p>
+                    <p class="text-3xl font-bold text-primary-600">{{ number_format($totalCustomers) }}</p>
+                </div>
+                <div class="p-3 bg-primary-100 rounded-full">
+                    <svg class="h-6 w-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                     </svg>
                 </div>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-neutral-600">Total Pelanggan</p>
-                <p class="text-2xl font-bold text-neutral-900">{{ $stats['total_customers'] ?? 0 }}</p>
-                <p class="text-xs text-green-600">+8% dari bulan lalu</p>
+        </div>
+
+        <!-- Total Admin -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-neutral-600">Total Admin</p>
+                    <p class="text-3xl font-bold text-secondary-600">{{ number_format($totalAdmins) }}</p>
+                </div>
+                <div class="p-3 bg-secondary-100 rounded-full">
+                    <svg class="h-6 w-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Total Products -->
-    <div class="card p-6">
-        <div class="flex items-center">
-            <div class="flex-shrink-0">
-                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Total Produk -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-neutral-600">Total Produk</p>
+                    <p class="text-3xl font-bold text-green-600">{{ number_format($totalProducts) }}</p>
+                </div>
+                <div class="p-3 bg-green-100 rounded-full">
+                    <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                     </svg>
                 </div>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-neutral-600">Total Produk</p>
-                <p class="text-2xl font-bold text-neutral-900">{{ $stats['total_products'] ?? 0 }}</p>
-                <p class="text-xs text-green-600">+5% dari bulan lalu</p>
-            </div>
         </div>
-    </div>
 
-    <!-- Total Orders -->
-    <div class="card p-6">
-        <div class="flex items-center">
-            <div class="flex-shrink-0">
-                <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                    <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        <!-- Total Kategori -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-neutral-600">Total Kategori</p>
+                    <p class="text-3xl font-bold text-purple-600">{{ number_format($totalCategories) }}</p>
+                </div>
+                <div class="p-3 bg-purple-100 rounded-full">
+                    <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                     </svg>
                 </div>
             </div>
-            <div class="ml-4">
+        </div>
+    </div>
+
+    <!-- Statistik Pesanan -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="text-center">
                 <p class="text-sm font-medium text-neutral-600">Total Pesanan</p>
-                <p class="text-2xl font-bold text-neutral-900">{{ $stats['total_orders'] ?? 0 }}</p>
-                <p class="text-xs text-green-600">+15% dari bulan lalu</p>
+                <p class="text-2xl font-bold text-neutral-900">{{ number_format($totalOrders) }}</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="text-center">
+                <p class="text-sm font-medium text-neutral-600">Menunggu Pembayaran</p>
+                <p class="text-2xl font-bold text-yellow-600">{{ number_format($pendingOrders) }}</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="text-center">
+                <p class="text-sm font-medium text-neutral-600">Sedang Diproses</p>
+                <p class="text-2xl font-bold text-blue-600">{{ number_format($processingOrders) }}</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="text-center">
+                <p class="text-sm font-medium text-neutral-600">Dikirim</p>
+                <p class="text-2xl font-bold text-indigo-600">{{ number_format($shippedOrders) }}</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="text-center">
+                <p class="text-sm font-medium text-neutral-600">Selesai</p>
+                <p class="text-2xl font-bold text-green-600">{{ number_format($completedOrders) }}</p>
             </div>
         </div>
     </div>
-</div>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-    <!-- Revenue Chart -->
-    <div class="card p-6">
-        <h3 class="text-lg font-semibold text-neutral-900 mb-4">Pendapatan 30 Hari Terakhir</h3>
-        <canvas id="revenueChart" width="400" height="200"></canvas>
-    </div>
-
-    <!-- Customer Growth Chart -->
-    <div class="card p-6">
-        <h3 class="text-lg font-semibold text-neutral-900 mb-4">Pertumbuhan Pelanggan</h3>
-        <canvas id="customerChart" width="400" height="200"></canvas>
-    </div>
-</div>
-
-<!-- Management Actions -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-    <!-- Customer Management -->
-    <div class="card p-6">
-        <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-900">Manajemen Pelanggan</h3>
-                <p class="text-sm text-neutral-600">Kelola data pelanggan dan grup</p>
+    <!-- Pendapatan -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="text-center">
+                <p class="text-sm font-medium text-neutral-600">Pendapatan Hari Ini</p>
+                <p class="text-2xl font-bold text-green-600">Rp {{ number_format($todayRevenue, 0, ',', '.') }}</p>
             </div>
         </div>
-        <div class="space-y-2">
-            <a href="{{ route('owner.customers.index') }}" class="btn-primary w-full text-center">
-                Lihat Pelanggan
-            </a>
-            <button onclick="openCreateCustomerModal()" class="btn-outline w-full">
-                Tambah Pelanggan
-            </button>
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="text-center">
+                <p class="text-sm font-medium text-neutral-600">Pendapatan Bulan Ini</p>
+                <p class="text-2xl font-bold text-primary-600">Rp {{ number_format($thisMonthRevenue, 0, ',', '.') }}</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <div class="text-center">
+                <p class="text-sm font-medium text-neutral-600">Pendapatan Bulan Lalu</p>
+                <p class="text-2xl font-bold text-neutral-600">Rp {{ number_format($lastMonthRevenue, 0, ',', '.') }}</p>
+            </div>
         </div>
     </div>
 
-    <!-- Product Management -->
-    <div class="card p-6">
-        <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-900">Manajemen Produk</h3>
-                <p class="text-sm text-neutral-600">Kelola produk dan harga bertingkat</p>
-            </div>
+    <!-- Grafik dan Tabel -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Grafik Pendapatan 7 Hari -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Pendapatan 7 Hari Terakhir</h3>
+            <canvas id="revenueChart" width="400" height="200"></canvas>
         </div>
-        <div class="space-y-2">
-            <a href="{{ route('admin.products.index') }}" class="btn-primary w-full text-center">
-                Lihat Produk
-            </a>
-            <a href="{{ route('admin.products.create') }}" class="btn-outline w-full text-center">
-                Tambah Produk
-            </a>
+
+        <!-- Grafik Pendapatan 12 Bulan -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Pendapatan 12 Bulan Terakhir</h3>
+            <canvas id="monthlyRevenueChart" width="400" height="200"></canvas>
         </div>
     </div>
 
-    <!-- Order Management -->
-    <div class="card p-6">
-        <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
-                <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-900">Manajemen Pesanan</h3>
-                <p class="text-sm text-neutral-600">Kelola pesanan dan status pembayaran</p>
-            </div>
-        </div>
-        <div class="space-y-2">
-            <a href="{{ route('admin.orders.index') }}" class="btn-primary w-full text-center">
-                Lihat Pesanan
-            </a>
-            <a href="{{ route('admin.reports.index') }}" class="btn-outline w-full text-center">
-                Lihat Laporan
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- Recent Activity -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-    <!-- Recent Orders -->
-    <div class="card p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-neutral-900">Pesanan Terbaru</h3>
-            <a href="{{ route('admin.orders.index') }}" class="text-sm text-primary-600 hover:text-primary-700">Lihat Semua</a>
-        </div>
-        <div class="space-y-4">
-            @forelse($recentOrders as $order)
-            <div class="flex items-center justify-between p-3 bg-neutral-50 rounded-lg">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                        <span class="text-primary-600 font-medium text-sm">#{{ $order->id }}</span>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-neutral-900">{{ $order->user->name ?? 'Guest' }}</p>
-                        <p class="text-xs text-neutral-500">{{ $order->created_at->format('d M Y, H:i') }}</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <p class="text-sm font-semibold text-neutral-900">Rp {{ number_format($order->total_price) }}</p>
-                    <span class="badge {{ 
-                        $order->status === 'pending' ? 'badge-warning' : 
-                        ($order->status === 'completed' ? 'badge-success' : 'badge-primary')
-                    }}">
-                        {{ ucfirst($order->status) }}
-                    </span>
-                            </div>
-                            </div>
-            @empty
-            <p class="text-neutral-500 text-center py-4">Tidak ada pesanan terbaru</p>
-            @endforelse
-                            </div>
+    <!-- Produk Terlaris dan Stok Rendah -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Produk Terlaris -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Produk Terlaris</h3>
+            <div class="space-y-4">
+                @forelse($bestSellingProducts as $product)
+                <div class="flex items-center justify-between p-3 bg-neutral-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder-product.jpg') }}" 
+                             alt="{{ $product->name }}" class="w-10 h-10 object-cover rounded">
+                        <div>
+                            <p class="font-medium text-neutral-900">{{ $product->name }}</p>
+                            <p class="text-sm text-neutral-600">{{ $product->category->name }}</p>
                         </div>
-
-    <!-- Top Customers -->
-    <div class="card p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-neutral-900">Pelanggan Terbaik</h3>
-            <a href="{{ route('owner.customers.index') }}" class="text-sm text-primary-600 hover:text-primary-700">Lihat Semua</a>
-        </div>
-        <div class="space-y-4">
-            @forelse($topCustomers as $customer)
-            <div class="flex items-center justify-between p-3 bg-neutral-50 rounded-lg">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                        <span class="text-primary-600 font-medium text-sm">{{ substr($customer->name, 0, 1) }}</span>
                     </div>
-                    <div>
-                        <p class="text-sm font-medium text-neutral-900">{{ $customer->name }}</p>
-                        <p class="text-xs text-neutral-500">{{ $customer->orders_count ?? 0 }} pesanan</p>
+                    <div class="text-right">
+                        <p class="font-semibold text-primary-600">{{ number_format($product->sales_count) }}</p>
+                        <p class="text-xs text-neutral-500">terjual</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-sm font-semibold text-neutral-900">Rp {{ number_format($customer->total_spent ?? 0) }}</p>
-                    @if($customer->customerGroup)
-                    <span class="badge-primary text-xs">{{ $customer->customerGroup->name }}</span>
-                    @endif
-                </div>
+                @empty
+                <p class="text-neutral-500 text-center py-4">Belum ada data penjualan</p>
+                @endforelse
             </div>
-            @empty
-            <p class="text-neutral-500 text-center py-4">Tidak ada data pelanggan</p>
-            @endforelse
+        </div>
+
+        <!-- Produk Stok Rendah -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Produk Stok Rendah</h3>
+            <div class="space-y-4">
+                @forelse($lowStockProducts as $product)
+                <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder-product.jpg') }}" 
+                             alt="{{ $product->name }}" class="w-10 h-10 object-cover rounded">
+                        <div>
+                            <p class="font-medium text-neutral-900">{{ $product->name }}</p>
+                            <p class="text-sm text-neutral-600">{{ $product->category->name }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold text-red-600">{{ number_format($product->stock) }}</p>
+                        <p class="text-xs text-neutral-500">stok tersisa</p>
+                    </div>
+                </div>
+                @empty
+                <p class="text-neutral-500 text-center py-4">Semua produk memiliki stok yang cukup</p>
+                @endforelse
+            </div>
+                            </div>
+                            </div>
+
+    <!-- Pelanggan Terbaik dan Aktivitas Terbaru -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Pelanggan Terbaik -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Pelanggan Terbaik</h3>
+            <div class="space-y-4">
+                @forelse($topCustomers as $customer)
+                <div class="flex items-center justify-between p-3 bg-neutral-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                            <span class="text-primary-600 font-semibold">{{ substr($customer->name, 0, 1) }}</span>
+                            </div>
+                        <div>
+                            <p class="font-medium text-neutral-900">{{ $customer->name }}</p>
+                            <p class="text-sm text-neutral-600">{{ $customer->email }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold text-primary-600">Rp {{ number_format($customer->orders_sum_total_amount ?? 0, 0, ',', '.') }}</p>
+                        <p class="text-xs text-neutral-500">total belanja</p>
+                    </div>
+                </div>
+                @empty
+                <p class="text-neutral-500 text-center py-4">Belum ada data pelanggan</p>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Aktivitas Terbaru -->
+        <div class="bg-white rounded-lg shadow-soft p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Aktivitas Terbaru</h3>
+            <div class="space-y-4">
+                @forelse($recentActivities as $activity)
+                <div class="flex items-start space-x-3 p-3 bg-neutral-50 rounded-lg">
+                    <div class="p-2 bg-{{ $activity['color'] }}-100 rounded-full">
+                        @if($activity['icon'] === 'shopping-cart')
+                        <svg class="h-4 w-4 text-{{ $activity['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+                        </svg>
+                        @elseif($activity['icon'] === 'package')
+                        <svg class="h-4 w-4 text-{{ $activity['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        @elseif($activity['icon'] === 'user')
+                        <svg class="h-4 w-4 text-{{ $activity['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        @endif
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-neutral-900">{{ $activity['message'] }}</p>
+                        <p class="text-xs text-neutral-500">{{ $activity['time']->diffForHumans() }}</p>
+                    </div>
+                </div>
+                @empty
+                <p class="text-neutral-500 text-center py-4">Belum ada aktivitas</p>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistik Kategori -->
+    <div class="bg-white rounded-lg shadow-soft p-6">
+        <h3 class="text-lg font-semibold text-neutral-900 mb-4">Statistik Kategori</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-neutral-200">
+                <thead class="bg-neutral-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Jumlah Produk</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Total Terjual</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Persentase</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-neutral-200">
+                    @forelse($categoryStats as $category)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-medium text-neutral-900">{{ $category->name }}</div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-neutral-900">{{ number_format($category->products_count) }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-neutral-900">{{ number_format($category->products_sum_sales_count ?? 0) }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-neutral-900">
+                                @php
+                                    $totalSales = $categoryStats->sum('products_sum_sales_count');
+                                    $percentage = $totalSales > 0 ? ($category->products_sum_sales_count / $totalSales) * 100 : 0;
+                                @endphp
+                                {{ number_format($percentage, 1) }}%
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-neutral-500">Belum ada data kategori</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Revenue Chart
+// Grafik Pendapatan 7 Hari
 const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-new Chart(revenueCtx, {
+const revenueChart = new Chart(revenueCtx, {
     type: 'line',
     data: {
-        labels: @json($chartData['labels'] ?? []),
+        labels: {!! json_encode(collect($revenueChart)->pluck('date')) !!},
         datasets: [{
             label: 'Pendapatan (Rp)',
-            data: @json($chartData['revenue'] ?? []),
+            data: {!! json_encode(collect($revenueChart)->pluck('revenue')) !!},
             borderColor: 'rgb(59, 130, 246)',
             backgroundColor: 'rgba(59, 130, 246, 0.1)',
             tension: 0.4,
@@ -270,17 +344,17 @@ new Chart(revenueCtx, {
     }
 });
 
-// Customer Chart
-const customerCtx = document.getElementById('customerChart').getContext('2d');
-new Chart(customerCtx, {
+// Grafik Pendapatan 12 Bulan
+const monthlyRevenueCtx = document.getElementById('monthlyRevenueChart').getContext('2d');
+const monthlyRevenueChart = new Chart(monthlyRevenueCtx, {
     type: 'bar',
     data: {
-        labels: @json($chartData['labels'] ?? []),
+        labels: {!! json_encode(collect($monthlyRevenueChart)->pluck('month')) !!},
         datasets: [{
-            label: 'Pelanggan Baru',
-            data: @json($chartData['customers'] ?? []),
-            backgroundColor: 'rgba(16, 185, 129, 0.8)',
-            borderColor: 'rgb(16, 185, 129)',
+            label: 'Pendapatan (Rp)',
+            data: {!! json_encode(collect($monthlyRevenueChart)->pluck('revenue')) !!},
+            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+            borderColor: 'rgb(34, 197, 94)',
             borderWidth: 1
         }]
     },
@@ -293,7 +367,12 @@ new Chart(customerCtx, {
         },
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return 'Rp ' + value.toLocaleString('id-ID');
+                    }
+                }
             }
         }
     }
