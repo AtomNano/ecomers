@@ -2,39 +2,37 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-
-    const ROLE_ADMIN = 'admin';
-    const ROLE_OWNER = 'owner';
-    const ROLE_CUSTOMER = 'customer';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @resources\sass\_variables.scss array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
         'email',
-        'password',
         'role',
-        'address',
-        'phone_number',
+        'phone',
         'province',
         'city',
         'district',
+        'address',
+        'password',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @resources\sass\_variables.scss array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -54,13 +52,14 @@ class User extends Authenticatable
         ];
     }
 
+    // Relationships
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    public function cartItems()
+    public function carts()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->hasMany(Cart::class);
     }
 }

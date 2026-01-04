@@ -2,20 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderItem extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'order_id',
         'product_id',
         'quantity',
-        'price',
+        'price_type',
+        'unit_price',
+        'subtotal',
     ];
 
+    protected $casts = [
+        'unit_price' => 'decimal:2',
+        'subtotal' => 'decimal:2',
+    ];
+
+    // Relationships
     public function order()
     {
         return $this->belongsTo(Order::class);
@@ -26,6 +31,3 @@ class OrderItem extends Model
         return $this->belongsTo(Product::class);
     }
 }
-
-
-

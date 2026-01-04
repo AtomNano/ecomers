@@ -1,109 +1,183 @@
-<x-app-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-bold">Detail Produk: {{ $product->name }}</h1>
-                        <div class="flex space-x-2">
-                            <a href="{{ route('admin.products.edit', $product) }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 focus:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                Edit
-                            </a>
-                            <a href="{{ route('admin.products.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                Kembali
-                            </a>
-                        </div>
+@extends('layouts.app')
+
+@section('title', 'Detail Produk - ' . $product->name)
+
+@section('content')
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-start mb-8">
+        <div>
+            <h1 class="text-4xl font-bold text-gray-800">{{ $product->name }}</h1>
+            <p class="text-gray-600 mt-2">
+                <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm font-semibold">
+                    📁 {{ $product->category->name }}
+                </span>
+            </p>
+        </div>
+        <div class="space-x-2">
+            <a href="{{ route('admin.products.edit', $product) }}" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 font-semibold">
+                ✏️ Edit Produk
+            </a>
+            <a href="{{ route('admin.products.index') }}" class="inline-block bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700 font-semibold">
+                ← Kembali
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Image Section -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                @if($product->image)
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-auto rounded-lg object-cover">
+                @else
+                    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <span class="text-gray-500 text-lg">📸 Tidak ada gambar</span>
                     </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Product Image -->
-                        <div>
-                            <div class="aspect-w-1 aspect-h-1 w-full">
-                                <img src="{{ $product->image ? asset('storage/products/' . $product->image) : 'https://placehold.co/600x600/f3f4f6/374151?text=Produk' }}" 
-                                     alt="{{ $product->name }}" 
-                                     class="w-full h-96 object-center object-cover rounded-lg">
-                            </div>
-                        </div>
-
-                        <!-- Product Details -->
-                        <div class="space-y-6">
-                            <div>
-                                <h2 class="text-xl font-semibold text-gray-900">{{ $product->name }}</h2>
-                                <p class="text-sm text-gray-500">Kategori: {{ $product->category->name ?? 'Tidak ada kategori' }}</p>
-                            </div>
-
-                            @if($product->description)
-                            <div>
-                                <h3 class="text-lg font-medium text-gray-900">Deskripsi</h3>
-                                <p class="mt-1 text-gray-600">{{ $product->description }}</p>
-                            </div>
+                @endif
+                
+                <!-- Stock Status -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Status Stock</h3>
+                    <div class="text-center">
+                        <span class="text-4xl font-bold
+                            @if($product->stock <= 10) text-red-600
+                            @elseif($product->stock <= 20) text-yellow-600
+                            @else text-green-600
+                            @endif">
+                            {{ $product->stock }}
+                        </span>
+                        <p class="text-gray-600 text-sm mt-2">
+                            @if($product->stock <= 10)
+                                🔴 Stok Rendah
+                            @elseif($product->stock <= 20)
+                                🟡 Stok Sedang
+                            @else
+                                🟢 Stok Aman
                             @endif
-
-                            <div>
-                                <h3 class="text-lg font-medium text-gray-900">Harga</h3>
-                                <div class="mt-2 space-y-2">
-                                    <div class="flex justify-between">
-                                        <span class="text-sm text-gray-600">Harga Satuan (per pcs):</span>
-                                        <span class="text-sm font-medium text-gray-900">Rp {{ number_format($product->price_per_piece, 0, ',', '.') }}</span>
-                                    </div>
-                                    @if($product->price_per_four)
-                                    <div class="flex justify-between">
-                                        <span class="text-sm text-gray-600">Harga Grosir (> 4 pcs):</span>
-                                        <span class="text-sm font-medium text-gray-900">Rp {{ number_format($product->price_per_four, 0, ',', '.') }}</span>
-                                    </div>
-                                    @endif
-                                    @if($product->price_per_dozen)
-                                    <div class="flex justify-between">
-                                        <span class="text-sm text-gray-600">Harga per Lusin/Dus:</span>
-                                        <span class="text-sm font-medium text-gray-900">Rp {{ number_format($product->price_per_dozen, 0, ',', '.') }}</span>
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 class="text-lg font-medium text-gray-900">Informasi Stok</h3>
-                                <div class="mt-2">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-                                        @if($product->stock > 10) bg-green-100 text-green-800
-                                        @elseif($product->stock > 0) bg-yellow-100 text-yellow-800
-                                        @else bg-red-100 text-red-800 @endif">
-                                        {{ $product->stock }} pcs tersedia
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 class="text-lg font-medium text-gray-900">Status</h3>
-                                <div class="mt-2 space-y-2">
-                                    <div>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                            @if($product->is_featured) bg-yellow-100 text-yellow-800
-                                            @else bg-gray-100 text-gray-800 @endif">
-                                            @if($product->is_featured) Produk Unggulan @else Produk Normal @endif
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">Total Penjualan: {{ $product->sales_count }} pcs</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 class="text-lg font-medium text-gray-900">Informasi Produk</h3>
-                                <div class="mt-2 space-y-1 text-sm text-gray-600">
-                                    <div>Dibuat: {{ $product->created_at->format('d M Y H:i') }}</div>
-                                    <div>Diperbarui: {{ $product->updated_at->format('d M Y H:i') }}</div>
-                                    <div>Slug: {{ $product->slug }}</div>
-                                </div>
-                            </div>
-                        </div>
+                        </p>
                     </div>
+                    <p class="text-center text-xs text-gray-500 mt-2">Minimum stok: {{ $product->min_stock ?? 5 }} pcs</p>
                 </div>
             </div>
         </div>
+
+        <!-- Details Section -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Description -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📝 Deskripsi</h2>
+                <p class="text-gray-700 leading-relaxed">{{ $product->description }}</p>
+            </div>
+
+            <!-- Pricing -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">💰 Harga Bertingkat</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Unit Price -->
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <p class="text-gray-600 text-sm font-semibold">HARGA PER SATUAN</p>
+                        <p class="text-2xl font-bold text-blue-600 mt-1">
+                            Rp {{ number_format($product->price_unit, 0, ',', '.') }}
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">Per 1 {{ $product->unit ?? 'pcs' }}</p>
+                    </div>
+
+                    <!-- Bulk Price -->
+                    <div class="border-l-4 border-yellow-500 pl-4">
+                        <p class="text-gray-600 text-sm font-semibold">HARGA BULK (4+)</p>
+                        @if($product->price_bulk_4)
+                            <p class="text-2xl font-bold text-yellow-600 mt-1">
+                                Rp {{ number_format($product->price_bulk_4, 0, ',', '.') }}
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1">Mulai pembelian 4 pcs</p>
+                            @if($product->price_bulk_4 < $product->price_unit)
+                                <p class="text-xs text-green-600 font-semibold mt-1">
+                                    💚 Hemat Rp {{ number_format($product->price_unit - $product->price_bulk_4, 0, ',', '.') }}/pcs
+                                </p>
+                            @endif
+                        @else
+                            <p class="text-2xl font-bold text-gray-400 mt-1">-</p>
+                            <p class="text-xs text-gray-500 mt-1">Tidak ada harga bulk</p>
+                        @endif
+                    </div>
+
+                    <!-- Dozen Price -->
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <p class="text-gray-600 text-sm font-semibold">HARGA LUSIN/DUS</p>
+                        @if($product->price_dozen)
+                            <p class="text-2xl font-bold text-green-600 mt-1">
+                                Rp {{ number_format($product->price_dozen, 0, ',', '.') }}
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1">Mulai pembelian {{ $product->box_item_count ?? 12 }} pcs</p>
+                            @if($product->price_dozen < $product->price_unit)
+                                <p class="text-xs text-green-600 font-semibold mt-1">
+                                    💚 Hemat Rp {{ number_format($product->price_unit - $product->price_dozen, 0, ',', '.') }}/pcs
+                                </p>
+                            @endif
+                        @else
+                            <p class="text-2xl font-bold text-gray-400 mt-1">-</p>
+                            <p class="text-xs text-gray-500 mt-1">Tidak ada harga lusin</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unit Information -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📦 Informasi Satuan</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-600 text-sm font-semibold">Satuan Dasar</p>
+                        <p class="text-lg font-bold text-gray-800 mt-1">{{ $product->unit ?? 'pcs' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 text-sm font-semibold">Item Per Dus</p>
+                        <p class="text-lg font-bold text-gray-800 mt-1">{{ $product->box_item_count ?? 12 }} {{ $product->unit ?? 'pcs' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Status -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">⭐ Status Unggulan</h2>
+                @if($product->is_featured)
+                    <div class="bg-purple-100 border-l-4 border-purple-500 p-4 rounded">
+                        <p class="text-purple-800 font-semibold">✅ Produk Unggulan</p>
+                        <p class="text-purple-700 text-sm mt-1">Produk ini ditampilkan di halaman utama</p>
+                    </div>
+                @else
+                    <div class="bg-gray-100 border-l-4 border-gray-400 p-4 rounded">
+                        <p class="text-gray-800 font-semibold">⭕ Bukan Produk Unggulan</p>
+                        <p class="text-gray-700 text-sm mt-1">Produk tidak ditampilkan di halaman utama</p>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Timestamps -->
+            <div class="bg-gray-50 rounded-lg p-6 text-sm text-gray-600">
+                <p>📅 Dibuat: {{ $product->created_at->format('d M Y, H:i') }}</p>
+                <p>✏️ Diperbarui: {{ $product->updated_at->format('d M Y, H:i') }}</p>
+            </div>
+        </div>
     </div>
-</x-app-layout>
 
-
-
+    <!-- Action Buttons -->
+    <div class="mt-8 flex justify-center gap-4">
+        <a href="{{ route('admin.products.edit', $product) }}" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-semibold transition">
+            ✏️ Edit Produk
+        </a>
+        <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 font-semibold transition" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                🗑️ Hapus Produk
+            </button>
+        </form>
+        <a href="{{ route('admin.products.index') }}" class="bg-gray-600 text-white px-8 py-3 rounded-lg hover:bg-gray-700 font-semibold transition">
+            ← Kembali ke Daftar
+        </a>
+    </div>
+</div>
+@endsection
