@@ -5,164 +5,143 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\ProductTierPrice;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = Product::with('category');
-
-        // Search
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
-
-        // Category filter
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
-        }
-
-        // Status filter
-        if ($request->filled('status')) {
-            if ($request->status === 'active') {
-                $query->where('stock', '>', 0);
-            } elseif ($request->status === 'inactive') {
-                $query->where('stock', '=', 0);
-            }
-        }
-
-        $products = $query->latest()->paginate(15);
-        $categories = Category::all();
-
-        return view('admin.products.index', compact('products', 'categories'));
+        $products = Product::with('category')->paginate(15);
+        return view('admin.products.index', compact('products'));
     }
-
+    
     public function create()
     {
         $categories = Category::all();
         return view('admin.products.create', compact('categories'));
     }
-
+    
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'price_per_piece' => 'required|numeric|min:0',
-            'price_per_four' => 'nullable|numeric|min:0',
-            'price_per_dozen' => 'nullable|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+        // Validasi input dengan strict rules untuk pricing
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:products',
+            'description' => 'required|string|min:10',
             'category_id' => 'required|exists:categories,id',
-            'is_featured' => 'boolean',
-            'tier_prices' => 'nullable|array',
-            'tier_prices.*.tier_name' => 'required_with:tier_prices|string|max:255',
-            'tier_prices.*.min_quantity' => 'required_with:tier_prices|integer|min:1',
-            'tier_prices.*.price' => 'required_with:tier_prices|numeric|min:0',
+            
+            // Tiered Pricing - semua required, tapi tidak enforce unit > bulk > dozen
+            // (User bebas set harga, sistem akan otomatis pilih termurah)
+            'price_unit' => 'required|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
+            'price_bulk_4' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
+            'price_dozen' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
+            
+            // Stock management
+            'stock' => 'required|integer|min:0',
+            'unit' => 'nullable|string|max:50',
+            'box_item_count' => 'nullable|integer|min:1|max:999',
+            'is_featured' => 'nullable|boolean',
+            
+            // Image upload - max 2MB
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+        ], [
+            'name.unique' => 'Nama produk sudah digunakan',
+            'price_unit.regex' => 'Format harga tidak valid (gunakan format: 3500 atau 3500.50)',
+            'price_bulk_4.regex' => 'Format harga tidak valid (gunakan format: 3500 atau 3500.50)',
+            'price_dozen.regex' => 'Format harga tidak valid (gunakan format: 3500 atau 3500.50)',
+            'image.max' => 'Ukuran gambar maksimal 2MB'
         ]);
 
-        $data = $request->all();
-        $data['slug'] = Str::slug($request->name);
-        $data['is_featured'] = $request->has('is_featured');
-
+        // Set default jika tidak ada
+        $validated['unit'] = $validated['unit'] ?? 'Pcs';
+        $validated['box_item_count'] = $validated['box_item_count'] ?? 12;
+        $validated['is_featured'] = $validated['is_featured'] ?? false;
+        
+        // Handle image upload
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('products', $filename, 'public');
-            $data['image'] = $filename;
-        }
-
-        $product = Product::create($data);
-
-        // Create tier prices
-        if ($request->has('tier_prices')) {
-            foreach ($request->tier_prices as $tierData) {
-                if (!empty($tierData['tier_name']) && !empty($tierData['min_quantity']) && !empty($tierData['price'])) {
-                    ProductTierPrice::create([
-                        'product_id' => $product->id,
-                        'tier_name' => $tierData['tier_name'],
-                        'min_quantity' => $tierData['min_quantity'],
-                        'price' => $tierData['price'],
-                        'is_active' => true,
-                    ]);
-                }
+            // Delete old image if exists
+            if ($request->old('image')) {
+                \Storage::disk('public')->delete($request->old('image'));
             }
+            $validated['image'] = $request->file('image')->store('products', 'public');
         }
-
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan');
+        
+        Product::create($validated);
+        
+        return redirect()->route('admin.products.index')
+                        ->with('success', 'Produk berhasil ditambahkan');
     }
 
     public function show(Product $product)
     {
-        $product->load(['category', 'tierPrices']);
+        $product->load('category');
         return view('admin.products.show', compact('product'));
     }
 
     public function edit(Product $product)
     {
         $categories = Category::all();
-        $product->load('tierPrices');
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'price_per_piece' => 'required|numeric|min:0',
-            'price_per_four' => 'nullable|numeric|min:0',
-            'price_per_dozen' => 'nullable|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+        // Validasi dengan slug ignore produk saat ini
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:products,name,' . $product->id,
+            'description' => 'required|string|min:10',
             'category_id' => 'required|exists:categories,id',
-            'is_featured' => 'boolean',
-            'tier_prices' => 'nullable|array',
-            'tier_prices.*.tier_name' => 'required_with:tier_prices|string|max:255',
-            'tier_prices.*.min_quantity' => 'required_with:tier_prices|integer|min:1',
-            'tier_prices.*.price' => 'required_with:tier_prices|numeric|min:0',
+            
+            // Tiered Pricing
+            'price_unit' => 'required|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
+            'price_bulk_4' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
+            'price_dozen' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
+            
+            // Stock management
+            'stock' => 'required|integer|min:0',
+            'unit' => 'nullable|string|max:50',
+            'box_item_count' => 'nullable|integer|min:1|max:999',
+            'is_featured' => 'nullable|boolean',
+            
+            // Image - optional untuk update
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+        ], [
+            'name.unique' => 'Nama produk sudah digunakan produk lain',
+            'price_unit.regex' => 'Format harga tidak valid (gunakan format: 3500 atau 3500.50)',
+            'price_bulk_4.regex' => 'Format harga tidak valid (gunakan format: 3500 atau 3500.50)',
+            'price_dozen.regex' => 'Format harga tidak valid (gunakan format: 3500 atau 3500.50)',
+            'image.max' => 'Ukuran gambar maksimal 2MB'
         ]);
 
-        $data = $request->all();
-        $data['slug'] = Str::slug($request->name);
-        $data['is_featured'] = $request->has('is_featured');
-
+        $validated['unit'] = $validated['unit'] ?? 'Pcs';
+        $validated['box_item_count'] = $validated['box_item_count'] ?? 12;
+        $validated['is_featured'] = $validated['is_featured'] ?? false;
+        
+        // Handle image update
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('products', $filename, 'public');
-            $data['image'] = $filename;
-        }
-
-        $product->update($data);
-
-        // Update tier prices
-        $product->tierPrices()->delete();
-        if ($request->has('tier_prices')) {
-            foreach ($request->tier_prices as $tierData) {
-                if (!empty($tierData['tier_name']) && !empty($tierData['min_quantity']) && !empty($tierData['price'])) {
-                    ProductTierPrice::create([
-                        'product_id' => $product->id,
-                        'tier_name' => $tierData['tier_name'],
-                        'min_quantity' => $tierData['min_quantity'],
-                        'price' => $tierData['price'],
-                        'is_active' => true,
-                    ]);
-                }
+            // Delete old image
+            if ($product->image) {
+                \Storage::disk('public')->delete($product->image);
             }
+            $validated['image'] = $request->file('image')->store('products', 'public');
         }
-
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diperbarui');
+        
+        $product->update($validated);
+        
+        return redirect()->route('admin.products.index')
+                        ->with('success', 'Produk berhasil diperbarui');
     }
-
+    
     public function destroy(Product $product)
     {
-        $product->tierPrices()->delete();
+        // Check if product has been ordered
+        if ($product->orderItems()->exists()) {
+            return redirect()->route('admin.products.index')
+                            ->with('error', 'Tidak bisa menghapus produk ini. Produk sudah pernah diorder. Silakan ubah statusnya menjadi tidak aktif (uncheck Featured) untuk menyembunyikannya.');
+        }
+        
         $product->delete();
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus');
+        
+        return redirect()->route('admin.products.index')
+                        ->with('success', 'Produk berhasil dihapus');
     }
 }
-

@@ -2,37 +2,74 @@
 
 namespace App\Models;
 
-use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Helpers\PricingHelper;
 
 class Product extends Model
 {
-    use HasFactory, HasUuid, SoftDeletes;
-
     protected $fillable = [
         'name',
         'slug',
         'description',
+        'category_id',
         'image',
-        'price_per_piece',
-        'price_per_four',
-        'price_per_dozen',
+        'price_unit',
+        'price_bulk_4',
+        'price_dozen',
         'stock',
+        'unit',
+        'box_item_count',
         'is_featured',
-        'sales_count',
-        'category_id'
+        'min_stock',
     ];
 
+    protected $casts = [
+        'price_unit' => 'decimal:2',
+        'price_bulk_4' => 'decimal:2',
+        'price_dozen' => 'decimal:2',
+        'is_featured' => 'boolean',
+    ];
+
+    /**
+     * ✅ REFACTORED: Delegate pricing to PricingHelper (Single Source of Truth)
+     * Menghilangkan duplikasi logic di Model
+     */
+    public function calculateEffectivePrice($quantity)
+    {
+        $pricingData = PricingHelper::calculateItemPrice($this, $quantity);
+        return $pricingData['effective_price'];
+    }
+
+    /**
+     * Get price by tier type
+     */
+    public function getPrice($type = 'unit')
+    {
+        return match($type) {
+            'bulk_4' => (float) $this->price_bulk_4 ?? (float) $this->price_unit,
+            'dozen' => (float) $this->price_dozen ?? (float) $this->price_unit,
+            default => (float) $this->price_unit
+        };
+    }
+
+    /**
+     * Determine price tier berdasarkan quantity (via PricingHelper)
+     */
+    public function determineTier($quantity)
+    {
+        $pricingData = PricingHelper::calculateItemPrice($this, $quantity);
+        return $pricingData['price_type'];
+    }
+
+    // Relationships
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function tierPrices()
+    public function carts()
     {
-        return $this->hasMany(ProductTierPrice::class);
+        return $this->hasMany(Cart::class);
     }
 
     public function orderItems()
@@ -40,48 +77,27 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function cartItems()
+    public function priceTiers()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->hasMany(PriceTier::class);
+    }
+    /**
+     * Get discount amount between unit and bulk_4 price
+     */
+    public function getDiscount()
+    {
+        $unitPrice = (float) $this->price_unit;
+        $bulkPrice = (float) ($this->price_bulk_4 ?? $this->price_unit);
+        return max(0, $unitPrice - $bulkPrice);
     }
 
     /**
-     * Get the appropriate price for a given quantity and customer group
+     * Get discount percentage
      */
-    public function getPriceForQuantity($quantity, $customerGroupId = null)
+    public function getDiscountPercent()
     {
-        $tierPrice = ProductTierPrice::getPriceForQuantity($this->id, $quantity, $customerGroupId);
-        
-        if ($tierPrice) {
-            return $tierPrice->price;
-        }
-
-        // Fallback to default pricing
-        if ($quantity >= 12 && $this->price_per_dozen) {
-            return $this->price_per_dozen;
-        } elseif ($quantity >= 4 && $this->price_per_four) {
-            return $this->price_per_four;
-        }
-
-        return $this->price_per_piece;
-    }
-
-    /**
-     * Get all tier prices for this product
-     */
-    public function getTierPrices($customerGroupId = null)
-    {
-        $query = $this->tierPrices()->where('is_active', true);
-        
-        if ($customerGroupId) {
-            $query->where(function($q) use ($customerGroupId) {
-                $q->where('customer_group_id', $customerGroupId)
-                  ->orWhereNull('customer_group_id');
-            });
-        } else {
-            $query->whereNull('customer_group_id');
-        }
-
-        return $query->orderBy('min_quantity')->get();
+        $unitPrice = (float) $this->price_unit;
+        if ($unitPrice == 0) return 0;
+        return round(($this->getDiscount() / $unitPrice) * 100);
     }
 }

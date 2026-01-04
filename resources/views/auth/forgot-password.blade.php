@@ -1,25 +1,35 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+@extends('layouts.app')
+
+@section('title', 'Lupa Password - Grosir Berkat Ibu')
+
+@section('content')
+<div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white rounded shadow p-8 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-center mb-6">Lupa Password</h1>
+
+        <form action="{{ route('forgot-password-send') }}" method="POST" class="space-y-4">
+            @csrf
+
+            <p class="text-gray-600 text-sm mb-4">
+                Masukkan email Anda dan kami akan mengirimkan link untuk reset password.
+            </p>
+
+            <div>
+                <label class="block text-sm font-bold mb-2">Email</label>
+                <input type="email" name="email" value="{{ old('email') }}" class="w-full border rounded px-3 py-2" required>
+                @error('email')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <button type="submit" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700">
+                Kirim Link Reset
+            </button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <p class="text-sm"><a href="{{ route('login') }}" class="text-green-600 hover:text-green-700 font-bold">Kembali ke Login</a></p>
+        </div>
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</div>
+@endsection
