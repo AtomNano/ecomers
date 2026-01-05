@@ -21,6 +21,10 @@ use App\Http\Controllers\Owner\ReportController as OwnerReportController;
 Route::get('/', [CustomerHomeController::class, 'index'])->name('home');
 Route::get('/about', [CustomerHomeController::class, 'about'])->name('about');
 
+// Public Products - Dapat diakses tanpa login
+Route::get('/products', [CustomerProductController::class, 'publicIndex'])->name('products.index');
+Route::get('/products/{product}', [CustomerProductController::class, 'publicShow'])->name('products.show');
+
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
