@@ -20,40 +20,42 @@
 
         <!-- Bank Account & QRIS Section -->
         <div class="p-6 space-y-6">
-            <!-- BCA Bank -->
-            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-blue-400 transition">
-                <div class="flex items-center gap-3">
-                    <div class="h-8 w-12 bg-blue-600 rounded flex items-center justify-center">
-                        <span class="text-white font-bold text-xs">BCA</span>
+            <!-- Bank Information -->
+            @if(isset($storeSetting->bank_name) && isset($storeSetting->bank_account_number))
+                <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-blue-400 transition">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-12 bg-blue-600 rounded flex items-center justify-center">
+                            <span class="text-white font-bold text-lg"><i class="fas fa-university"></i></span>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500">{{ $storeSetting->bank_name }}</div>
+                            <div class="font-bold text-gray-800 tracking-wider text-lg" id="rek-bca">{{ $storeSetting->bank_account_number }}</div>
+                            <div class="text-xs text-gray-400">a.n {{ $storeSetting->bank_account_holder }}</div>
+                        </div>
                     </div>
-                    <div>
-                        <div class="text-xs text-gray-500">Bank BCA</div>
-                        <div class="font-bold text-gray-800" id="rek-bca">1234 5678 90</div>
-                        <div class="text-xs text-gray-400">a.n Grosir Berkat Ibu</div>
-                    </div>
+                    <button onclick="copyToClipboard('rek-bca')" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition font-medium">
+                        <i class="far fa-copy"></i> Salin
+                    </button>
                 </div>
-                <button onclick="copyToClipboard('rek-bca')" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded transition font-medium">
-                    Salin
-                </button>
-            </div>
+            @endif
 
             <!-- QRIS Section -->
-            <div class="text-center">
-                <p class="text-sm font-semibold text-gray-700 mb-3">Atau Scan QRIS Kami</p>
-                <div class="bg-gray-100 rounded-lg p-4 inline-block border border-gray-300">
-                    <svg class="w-32 h-32 text-gray-400" fill="currentColor" viewBox="0 0 100 100">
-                        <rect x="10" y="10" width="30" height="30" fill="black"/>
-                        <rect x="45" y="10" width="30" height="30" fill="black"/>
-                        <rect x="80" y="10" width="10" height="30" fill="black"/>
-                        <rect x="10" y="45" width="30" height="30" fill="black"/>
-                        <rect x="45" y="45" width="30" height="30" fill="black"/>
-                        <rect x="80" y="45" width="10" height="30" fill="black"/>
-                        <rect x="10" y="80" width="30" height="20" fill="black"/>
-                        <rect x="50" y="80" width="40" height="20" fill="black"/>
-                    </svg>
+            @if(isset($storeSetting->qris_image))
+                <div class="text-center pt-4 border-t border-gray-100">
+                    <p class="text-sm font-semibold text-gray-700 mb-3">Atau Scan QRIS Kami</p>
+                    <div class="bg-gray-50 rounded-xl p-3 inline-block border border-gray-200 shadow-sm">
+                        <img src="{{ asset('storage/' . $storeSetting->qris_image) }}" class="max-w-[250px] rounded-lg" alt="QRIS Code">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Dukung semua E-Wallet & Mobile Banking via QRIS</p>
                 </div>
-                <p class="text-xs text-gray-500 mt-2">Scan dengan aplikasi mobile banking Anda</p>
-            </div>
+            @endif
+            
+            @if(!isset($storeSetting->bank_name) && !isset($storeSetting->qris_image))
+                <div class="text-center p-6 bg-yellow-50 text-yellow-700 rounded-xl border border-yellow-200 text-sm">
+                    <i class="fas fa-exclamation-triangle text-xl mb-2 block"></i>
+                    Informasi pembayaran belum diatur oleh admin. Silakan hubungi WA admin.
+                </div>
+            @endif
         </div>
     </div>
 

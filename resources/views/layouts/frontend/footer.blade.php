@@ -47,9 +47,9 @@
                 <ul class="space-y-2">
                     <li><a href="{{ route('home') }}" class="text-primary-200 hover:text-white transition-colors">Beranda</a></li>
                     <li><a href="{{ route('products.index') }}" class="text-primary-200 hover:text-white transition-colors">Semua Produk</a></li>
-                    <li><a href="{{ route('categories.index') }}" class="text-primary-200 hover:text-white transition-colors">Kategori</a></li>
                     <li><a href="{{ route('about') }}" class="text-primary-200 hover:text-white transition-colors">Tentang Kami</a></li>
-                    <li><a href="{{ route('contact') }}" class="text-primary-200 hover:text-white transition-colors">Kontak</a></li>
+                    <li><a href="{{ route('login') }}" class="text-primary-200 hover:text-white transition-colors">Masuk</a></li>
+                    <li><a href="{{ route('register') }}" class="text-primary-200 hover:text-white transition-colors">Daftar</a></li>
                 </ul>
             </div>
 
@@ -57,11 +57,10 @@
             <div>
                 <h4 class="text-lg font-semibold mb-4">Layanan Pelanggan</h4>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('faq') }}" class="text-primary-200 hover:text-white transition-colors">FAQ</a></li>
-                    <li><a href="{{ route('shipping') }}" class="text-primary-200 hover:text-white transition-colors">Info Pengiriman</a></li>
-                    <li><a href="{{ route('payment') }}" class="text-primary-200 hover:text-white transition-colors">Cara Pembayaran</a></li>
-                    <li><a href="{{ route('return') }}" class="text-primary-200 hover:text-white transition-colors">Kebijakan Retur</a></li>
-                    <li><a href="{{ route('privacy') }}" class="text-primary-200 hover:text-white transition-colors">Kebijakan Privasi</a></li>
+                    <li class="text-primary-200"><i class="fas fa-clock mr-2"></i>Senin - Sabtu: 08:00 - 17:00</li>
+                    <li class="text-primary-200"><i class="fas fa-phone mr-2"></i>+62 21 1234 5678</li>
+                    <li class="text-primary-200"><i class="fas fa-envelope mr-2"></i>info@grosirberkatibu.com</li>
+                    <li class="text-primary-200"><i class="fab fa-whatsapp mr-2"></i>+62 812 3456 7890</li>
                 </ul>
             </div>
         </div>

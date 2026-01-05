@@ -35,6 +35,6 @@
         @endif
     </div>
     
-    <a href="{{ route('customer.home') }}" class="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">Kembali ke Home</a>
+    <a href="{{ route('home') }}" class="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">Kembali ke Home</a>
 </div>
 @endsection

@@ -13,17 +13,7 @@
                     <p class="text-white/80 mt-1">{{ $products->total() }} produk tersedia</p>
                 </div>
                 
-                <!-- Search Bar -->
-                <form method="GET" action="{{ route('products.index') }}" class="w-full md:w-auto">
-                    <div class="relative">
-                        <input type="text" name="search" value="{{ request('search') }}" 
-                               placeholder="Cari produk..." 
-                               class="w-full md:w-80 pl-4 pr-12 py-3 rounded-full border-0 shadow-lg focus:ring-2 focus:ring-white focus:outline-none">
-                        <button type="submit" class="absolute right-1 top-1 bottom-1 px-4 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
+                <!-- Search Bar removed as requested -->
             </div>
         </div>
     </div>
@@ -44,28 +34,68 @@
                         
                         <!-- Categories -->
                         <div class="mb-6">
-                            <p class="text-sm font-medium text-gray-700 mb-3">Kategori</p>
-                            <div class="space-y-2">
-                                <label class="flex items-center gap-2 cursor-pointer group">
+                            <p class="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Kategori</p>
+                            @php
+                                $icons = [
+                                    'sayur' => 'fas fa-carrot text-orange-500',
+                                    'buah' => 'fas fa-apple-alt text-red-500',
+                                    'bumbu' => 'fas fa-mortar-pestle text-stone-500',
+                                    'beras' => 'fas fa-seedling text-green-600',
+                                    'gandum' => 'fas fa-wheat text-yellow-600',
+                                    'minyak' => 'fas fa-bottle-droplet text-yellow-500',
+                                    'susu' => 'fas fa-glass-water text-blue-400', 
+                                    'kaleng' => 'fas fa-box text-gray-500',
+                                    'daging' => 'fas fa-drumstick-bite text-amber-700',
+                                    'ikan' => 'fas fa-fish text-blue-500',
+                                    'snack' => 'fas fa-cookie text-amber-500',
+                                    'minuman' => 'fas fa-coffee text-amber-800',
+                                ];
+                                
+                                function getCategoryIcon($name, $icons) {
+                                    $lowerName = strtolower($name);
+                                    foreach($icons as $key => $icon) {
+                                        if(str_contains($lowerName, $key)) return $icon;
+                                    }
+                                    return 'fas fa-tags text-gray-400';
+                                }
+                            @endphp
+
+                            <div class="space-y-1">
+                                <!-- All Categories -->
+                                <label class="flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all duration-200
+                                              {{ !request('category') ? 'bg-red-50 border-l-4 border-red-500' : 'hover:bg-gray-50 border-l-4 border-transparent' }}">
                                     <input type="radio" name="category" value="" 
                                            {{ !request('category') ? 'checked' : '' }}
                                            onchange="this.form.submit()"
-                                           class="w-4 h-4 text-red-500 border-gray-300 focus:ring-red-500">
-                                    <span class="text-gray-600 group-hover:text-red-500 transition">Semua Kategori</span>
+                                           class="hidden">
+                                    <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center border border-gray-100">
+                                        <i class="fas fa-th-large text-red-500"></i>
+                                    </div>
+                                    <span class="text-sm font-medium {{ !request('category') ? 'text-red-700' : 'text-gray-600' }}">
+                                        Semua Kategori
+                                    </span>
                                 </label>
+
                                 @foreach($categories as $category)
-                                <label class="flex items-center gap-2 cursor-pointer group">
+                                <label class="flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all duration-200
+                                              {{ request('category') == $category->id ? 'bg-red-50 border-l-4 border-red-500' : 'hover:bg-gray-50 border-l-4 border-transparent' }}">
                                     <input type="radio" name="category" value="{{ $category->id }}" 
                                            {{ request('category') == $category->id ? 'checked' : '' }}
                                            onchange="this.form.submit()"
-                                           class="w-4 h-4 text-red-500 border-gray-300 focus:ring-red-500">
-                                    <span class="text-gray-600 group-hover:text-red-500 transition">{{ $category->name }}</span>
+                                           class="hidden">
+                                    <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center border border-gray-100">
+                                        <i class="{{ getCategoryIcon($category->name, $icons) }}"></i>
+                                    </div>
+                                    <span class="text-sm font-medium {{ request('category') == $category->id ? 'text-red-700' : 'text-gray-600' }}">
+                                        {{ $category->name }}
+                                    </span>
                                 </label>
                                 @endforeach
                             </div>
                         </div>
                         
-                        <!-- Sort -->
+                        <!-- Sort (Divider) -->
+                        <div class="border-t border-gray-100 my-4"></div>
                         <div class="mb-6">
                             <p class="text-sm font-medium text-gray-700 mb-3">Urutkan</p>
                             <select name="sort" onchange="this.form.submit()" 

@@ -220,7 +220,7 @@
                 <div class="p-3">
                     <!-- Product Name -->
                     <h3 class="text-sm text-gray-800 font-medium line-clamp-2 min-h-[40px] hover:text-red-500 transition">
-                        <a href="{{ route('home') }}?product={{ $product->id }}">{{ $product->name }}</a>
+                        <a href="{{ route('products.show', $product) }}">{{ $product->name }}</a>
                     </h3>
                     
                     <!-- Price -->

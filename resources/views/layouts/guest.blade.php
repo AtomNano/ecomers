@@ -60,13 +60,13 @@
                 
                 <!-- Search Bar (Desktop) -->
                 <div class="hidden lg:flex flex-1 max-w-xl mx-8">
-                    <div class="relative w-full">
-                        <input type="text" placeholder="Cari produk..." 
+                    <form action="{{ route('products.index') }}" method="GET" class="relative w-full">
+                        <input type="text" name="search" placeholder="Cari produk..." value="{{ request('search') }}"
                                class="w-full pl-4 pr-12 py-3 border-2 border-gray-200 rounded-full focus:border-red-500 focus:outline-none transition">
-                        <button class="absolute right-1 top-1 bottom-1 px-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full hover:from-red-600 hover:to-orange-600 transition">
+                        <button type="submit" class="absolute right-1 top-1 bottom-1 px-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full hover:from-red-600 hover:to-orange-600 transition">
                             <i class="fas fa-search"></i>
                         </button>
-                    </div>
+                    </form>
                 </div>
                 
                 <!-- Desktop Navigation -->
@@ -167,13 +167,13 @@
             
             <!-- Mobile Search -->
             <div x-show="searchOpen" x-transition class="lg:hidden pb-4">
-                <div class="relative">
-                    <input type="text" placeholder="Cari produk..." 
+                <form action="{{ route('products.index') }}" method="GET" class="relative">
+                    <input type="text" name="search" placeholder="Cari produk..." value="{{ request('search') }}"
                            class="w-full pl-4 pr-12 py-3 border-2 border-gray-200 rounded-full focus:border-red-500 focus:outline-none">
-                    <button class="absolute right-1 top-1 bottom-1 px-4 bg-red-500 text-white rounded-full">
+                    <button type="submit" class="absolute right-1 top-1 bottom-1 px-4 bg-red-500 text-white rounded-full">
                         <i class="fas fa-search"></i>
                     </button>
-                </div>
+                </form>
             </div>
             
             <!-- Mobile Menu -->

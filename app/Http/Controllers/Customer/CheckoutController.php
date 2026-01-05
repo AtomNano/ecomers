@@ -12,6 +12,7 @@ use App\Helpers\PricingHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\StoreSetting;
 
 class CheckoutController extends Controller
 {
@@ -36,8 +37,9 @@ class CheckoutController extends Controller
         }
         
         $user = auth()->user();
+        $storeSetting = StoreSetting::first();
         
-        return view('customer.checkout', compact('cartItems', 'subtotal', 'user'));
+        return view('customer.checkout', compact('cartItems', 'subtotal', 'user', 'storeSetting'));
     }
 
     /**
@@ -162,6 +164,15 @@ class CheckoutController extends Controller
             
         }, 3); // 3 retries untuk transaction
         
+        // Send Notification to Admin & Owner
+        try {
+            $recipients = \App\Models\User::whereIn('role', ['admin', 'owner'])->get();
+            \Illuminate\Support\Facades\Notification::send($recipients, new \App\Notifications\NewOrderNotification($order));
+        } catch (\Exception $e) {
+            // Ignore notification error to not block checkout
+            \Illuminate\Support\Facades\Log::error('Notification Error: ' . $e->getMessage());
+        }
+
         // Redirect ke payment upload page
         return redirect()->route('customer.payment.show', $order)
                        ->with('success', 'Pesanan berhasil dibuat. Silakan upload bukti pembayaran.');

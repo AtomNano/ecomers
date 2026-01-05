@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
 use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\ReportController as OwnerReportController;
+use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 
 // Public Routes
 Route::get('/', [CustomerHomeController::class, 'index'])->name('home');
@@ -115,5 +116,9 @@ Route::middleware(['auth', 'owner'])->prefix('owner')->group(function () {
     Route::get('/reports', [OwnerReportController::class, 'index'])->name('owner.reports.index');
     Route::get('/reports/export', [OwnerReportController::class, 'exportCsv'])->name('owner.reports.export');
     Route::get('/reports/customers', [OwnerReportController::class, 'customerReport'])->name('owner.reports.customers');
+
+    // Settings (Payment & Store Info)
+    Route::get('/settings', [OwnerSettingController::class, 'edit'])->name('owner.settings.edit');
+    Route::put('/settings', [OwnerSettingController::class, 'update'])->name('owner.settings.update');
 });
 

@@ -15,7 +15,9 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->role === 'admin') {
+        // Allow both admin and owner roles to access admin routes
+        // Owner is the highest role and should have all admin privileges
+        if (auth()->check() && in_array(auth()->user()->role, ['admin', 'owner'])) {
             return $next($request);
         }
 

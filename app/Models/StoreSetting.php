@@ -16,5 +16,9 @@ class StoreSetting extends Model
         'city',
         'district',
         'maps_url',
+        'bank_name',
+        'bank_account_number',
+        'bank_account_holder',
+        'qris_image',
     ];
 }

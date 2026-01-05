@@ -5,14 +5,40 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\StoreSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with('user', 'payment')->latest()->paginate(15);
+        $query = Order::with('user', 'payment');
+
+        if ($request->has('status') && $request->status != 'all') {
+            if ($request->status == 'pending_payment') {
+                $query->where('status', 'pending');
+            } elseif ($request->status == 'processing') {
+                $query->whereIn('status', ['payment_verified', 'processing', 'shipped']);
+            } elseif ($request->status == 'completed') {
+                $query->where('status', 'completed');
+            } elseif ($request->status == 'cancelled') {
+                $query->where('status', 'cancelled');
+            }
+        }
+        
+        // Search functionality
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('invoice_number', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($u) use ($search) {
+                      $u->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $orders = $query->latest()->paginate(15);
         return view('admin.orders.index', compact('orders'));
     }
     
@@ -162,7 +188,10 @@ class OrderController extends Controller
                 ->with('info', 'Pesanan ini sedang diproses atau sudah selesai.');
         }
 
-        return view('orders.payment', compact('order'));
+        
+        $storeSetting = StoreSetting::first();
+
+        return view('orders.payment', compact('order', 'storeSetting'));
     }
 
     public function uploadProof(Request $request, $id)

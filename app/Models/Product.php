@@ -15,6 +15,7 @@ class Product extends Model
         'image',
         'price_unit',
         'price_bulk_4',
+        'bulk_min_qty',
         'price_dozen',
         'stock',
         'unit',

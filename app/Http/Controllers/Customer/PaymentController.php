@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\StoreSetting;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -17,8 +18,9 @@ class PaymentController extends Controller
         }
         
         $payment = $order->payment;
+        $storeSetting = StoreSetting::first();
         
-        return view('customer.payment.show', compact('order', 'payment'));
+        return view('customer.payment.show', compact('order', 'payment', 'storeSetting'));
     }
 
     public function uploadProof(Request $request, $orderId)
