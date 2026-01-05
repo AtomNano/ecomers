@@ -16,10 +16,15 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
 use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\ReportController as OwnerReportController;
+use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 
 // Public Routes
 Route::get('/', [CustomerHomeController::class, 'index'])->name('home');
 Route::get('/about', [CustomerHomeController::class, 'about'])->name('about');
+
+// Public Products - Dapat diakses tanpa login
+Route::get('/products', [CustomerProductController::class, 'publicIndex'])->name('products.index');
+Route::get('/products/{product}', [CustomerProductController::class, 'publicShow'])->name('products.show');
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -84,7 +89,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Order Management
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
-    Route::get('/orders/{id}/verify', [OrderController::class, 'show'])->name('admin.orders.verify');
+    Route::get('/orders/{id}/verify', [OrderController::class, 'verify'])->name('admin.orders.verify');
     Route::post('/orders/{id}/approve', [OrderController::class, 'approve'])->name('admin.orders.approve');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('admin.orders.reject');
     Route::post('/orders/{order}/ship', [OrderController::class, 'ship'])->name('admin.orders.ship');
@@ -111,5 +116,9 @@ Route::middleware(['auth', 'owner'])->prefix('owner')->group(function () {
     Route::get('/reports', [OwnerReportController::class, 'index'])->name('owner.reports.index');
     Route::get('/reports/export', [OwnerReportController::class, 'exportCsv'])->name('owner.reports.export');
     Route::get('/reports/customers', [OwnerReportController::class, 'customerReport'])->name('owner.reports.customers');
+
+    // Settings (Payment & Store Info)
+    Route::get('/settings', [OwnerSettingController::class, 'edit'])->name('owner.settings.edit');
+    Route::put('/settings', [OwnerSettingController::class, 'update'])->name('owner.settings.update');
 });
 

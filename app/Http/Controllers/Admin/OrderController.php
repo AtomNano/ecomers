@@ -5,21 +5,56 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\StoreSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with('user', 'payment')->latest()->paginate(15);
+        $query = Order::with('user', 'payment');
+
+        if ($request->has('status') && $request->status != 'all') {
+            if ($request->status == 'pending_payment') {
+                $query->where('status', 'pending');
+            } elseif ($request->status == 'processing') {
+                $query->whereIn('status', ['payment_verified', 'processing', 'shipped']);
+            } elseif ($request->status == 'completed') {
+                $query->where('status', 'completed');
+            } elseif ($request->status == 'cancelled') {
+                $query->where('status', 'cancelled');
+            }
+        }
+        
+        // Search functionality
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('invoice_number', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($u) use ($search) {
+                      $u->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $orders = $query->latest()->paginate(15);
         return view('admin.orders.index', compact('orders'));
     }
     
     /**
-     * Display order untuk approval (dari AdminOrderController)
+     * Display order detail (Read-only / Shipping / Completion)
      */
     public function show($id)
+    {
+        $order = Order::with(['user', 'items.product', 'payment'])->findOrFail($id);
+        return view('admin.orders.show', compact('order'));
+    }
+
+    /**
+     * Display verification page
+     */
+    public function verify($id)
     {
         $order = Order::with(['user', 'items.product', 'payment'])->findOrFail($id);
         return view('admin.orders.verify', compact('order'));
@@ -60,7 +95,8 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.dashboard')->with('success', 'Pembayaran diverifikasi dan stok berkurang permanen.');
+            return redirect()->route('admin.orders.show', $order->id)
+                ->with('success', 'Pembayaran diverifikasi. Stok berkurang. Silakan proses pengiriman.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -81,10 +117,12 @@ class OrderController extends Controller
      * - Increment stok kembali untuk setiap item
      * - Update payment & order status secara atomic
      */
-    public function reject(Order $order, Request $request)
+    public function reject(Request $request, $id)
     {
         $request->validate(['reason' => 'required|string|min:5']);
         
+        $order = Order::with('payment')->findOrFail($id);
+
         if ($order->payment->status !== 'pending') {
             return back()->with('error', 'Pembayaran sudah diverifikasi');
         }
@@ -162,7 +200,10 @@ class OrderController extends Controller
                 ->with('info', 'Pesanan ini sedang diproses atau sudah selesai.');
         }
 
-        return view('orders.payment', compact('order'));
+        
+        $storeSetting = StoreSetting::first();
+
+        return view('orders.payment', compact('order', 'storeSetting'));
     }
 
     public function uploadProof(Request $request, $id)

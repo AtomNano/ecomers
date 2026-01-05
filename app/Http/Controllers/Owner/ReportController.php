@@ -17,10 +17,11 @@ class ReportController extends Controller
         $year = request('year', date('Y'));
         
         $revenue = $this->getRevenueData($period, $year);
+        // SQLite compatible: use strftime instead of MONTH()
         $customerGrowth = User::where('role', 'customer')
-                             ->whereYear('created_at', $year)
-                             ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                             ->groupByRaw('MONTH(created_at)')
+                             ->whereRaw("strftime('%Y', created_at) = ?", [$year])
+                             ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, COUNT(*) as count")
+                             ->groupByRaw("strftime('%m', created_at)")
                              ->get();
         
         return view('owner.reports.index', compact('revenue', 'customerGrowth', 'period', 'year'));
@@ -93,10 +94,11 @@ class ReportController extends Controller
             }
 
             // 2. Ambil Data Real dari Database (Hanya yang Completed)
+            // SQLite compatible: use strftime instead of MONTH()
             $data = Order::where('status', 'completed')
-                ->whereYear('created_at', $year)
-                ->selectRaw('MONTH(created_at) as month, SUM(total_amount) as revenue, COUNT(*) as total_order')
-                ->groupByRaw('MONTH(created_at)')
+                ->whereRaw("strftime('%Y', created_at) = ?", [$year])
+                ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, SUM(total_amount) as revenue, COUNT(*) as total_order")
+                ->groupByRaw("strftime('%m', created_at)")
                 ->get();
 
             // 3. Timpa data kosong dengan data real
@@ -116,10 +118,11 @@ class ReportController extends Controller
                 $orders[$week] = 0;
             }
 
+            // SQLite compatible: use strftime instead of WEEK()
             $data = Order::where('status', 'completed')
-                ->whereYear('created_at', $year)
-                ->selectRaw('WEEK(created_at) as week, SUM(total_amount) as revenue, COUNT(*) as total_order')
-                ->groupByRaw('WEEK(created_at)')
+                ->whereRaw("strftime('%Y', created_at) = ?", [$year])
+                ->selectRaw("CAST(strftime('%W', created_at) AS INTEGER) as week, SUM(total_amount) as revenue, COUNT(*) as total_order")
+                ->groupByRaw("strftime('%W', created_at)")
                 ->get();
 
             foreach ($data as $row) {

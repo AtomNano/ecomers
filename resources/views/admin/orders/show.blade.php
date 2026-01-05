@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin-layout')
 
 @section('title', 'Detail Pesanan - #' . $order->invoice_number)
 

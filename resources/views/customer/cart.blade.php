@@ -51,7 +51,7 @@
 
                             <!-- Quantity & Total -->
                             <div class="md:flex md:flex-col md:justify-between md:items-end">
-                                <div class="mb-4 md:mb-0">
+                                <div class="mb-4 md:mb-0 quantity-wrapper">
                                     <label class="text-sm text-gray-600 font-medium">Jumlah</label>
                                     <form action="{{ route('customer.cart.update', $item) }}" method="POST" class="flex items-center gap-2 mt-2">
                                         @csrf
@@ -64,6 +64,19 @@
                                             <i class="fas fa-plus text-sm"></i>
                                         </button>
                                     </form>
+                                    
+                                    <!-- Quick Options -->
+                                    <div class="mt-2 flex flex-wrap gap-2">
+                                        <button type="button" onclick="updateCartQty(this, 1)" class="px-2 py-1 text-xs border border-blue-200 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition">
+                                            Satuan
+                                        </button>
+                                        <button type="button" onclick="updateCartQty(this, 4)" class="px-2 py-1 text-xs border border-yellow-200 bg-yellow-50 text-yellow-700 rounded hover:bg-yellow-100 transition">
+                                            Grosir (4)
+                                        </button>
+                                        <button type="button" onclick="updateCartQty(this, 12)" class="px-2 py-1 text-xs border border-green-200 bg-green-50 text-green-700 rounded hover:bg-green-100 transition">
+                                            Dus (12)
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div class="text-right">
@@ -180,6 +193,22 @@
     function decreaseQty(btn) {
         const input = btn.parentElement.querySelector('input[type="number"]');
         input.value = Math.max(parseInt(input.value) - 1, 1);
+        input.form.submit();
+    }
+
+    function updateCartQty(btn, qty) {
+        const wrapper = btn.closest('.quantity-wrapper');
+        const input = wrapper.querySelector('input[name="quantity"]');
+        const max = parseInt(input.max);
+        
+        if (qty > max) {
+            alert('Stok tidak mencukupi (Maksimal: ' + max + ')');
+            input.value = max;
+        } else {
+            input.value = qty;
+        }
+        
+        // Find the form and submit
         input.form.submit();
     }
 </script>

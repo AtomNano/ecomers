@@ -25,16 +25,20 @@ class ReportController extends Controller
         $year = request('year', date('Y'));
         
         if ($period === 'monthly') {
+            // SQLite compatible: use strftime instead of MONTH()
             $data = Order::where('status', 'completed')
-                        ->whereYear('created_at', $year)
-                        ->selectRaw('MONTH(created_at) as month, SUM(total_amount) as revenue, COUNT(*) as orders')
-                        ->groupByRaw('MONTH(created_at)')
+                        ->whereRaw("strftime('%Y', created_at) = ?", [$year])
+                        ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, SUM(total_amount) as revenue, COUNT(*) as orders")
+                        ->groupByRaw("strftime('%m', created_at)")
+                        ->orderByRaw("strftime('%m', created_at)")
                         ->get();
         } else {
+            // SQLite compatible: use strftime instead of WEEK()
             $data = Order::where('status', 'completed')
-                        ->whereYear('created_at', $year)
-                        ->selectRaw('WEEK(created_at) as week, SUM(total_amount) as revenue, COUNT(*) as orders')
-                        ->groupByRaw('WEEK(created_at)')
+                        ->whereRaw("strftime('%Y', created_at) = ?", [$year])
+                        ->selectRaw("CAST(strftime('%W', created_at) AS INTEGER) as week, SUM(total_amount) as revenue, COUNT(*) as orders")
+                        ->groupByRaw("strftime('%W', created_at)")
+                        ->orderByRaw("strftime('%W', created_at)")
                         ->get();
         }
         
@@ -47,16 +51,20 @@ class ReportController extends Controller
     private function getReportData($period, $year)
     {
         if ($period === 'monthly') {
+            // SQLite compatible: use strftime instead of MONTH()
             return Order::where('status', 'completed')
-                       ->whereYear('created_at', $year)
-                       ->selectRaw('MONTH(created_at) as month, SUM(total_amount) as revenue, COUNT(*) as orders')
-                       ->groupByRaw('MONTH(created_at)')
+                       ->whereRaw("strftime('%Y', created_at) = ?", [$year])
+                       ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, SUM(total_amount) as revenue, COUNT(*) as orders")
+                       ->groupByRaw("strftime('%m', created_at)")
+                       ->orderByRaw("strftime('%m', created_at)")
                        ->get();
         } else {
+            // SQLite compatible: use strftime instead of WEEK()
             return Order::where('status', 'completed')
-                       ->whereYear('created_at', $year)
-                       ->selectRaw('WEEK(created_at) as week, SUM(total_amount) as revenue, COUNT(*) as orders')
-                       ->groupByRaw('WEEK(created_at)')
+                       ->whereRaw("strftime('%Y', created_at) = ?", [$year])
+                       ->selectRaw("CAST(strftime('%W', created_at) AS INTEGER) as week, SUM(total_amount) as revenue, COUNT(*) as orders")
+                       ->groupByRaw("strftime('%W', created_at)")
+                       ->orderByRaw("strftime('%W', created_at)")
                        ->get();
         }
     }

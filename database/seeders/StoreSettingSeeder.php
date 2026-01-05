@@ -12,14 +12,18 @@ class StoreSettingSeeder extends Seeder
      */
     public function run(): void
     {
+        StoreSetting::truncate();
         StoreSetting::create([
             'store_name' => 'Grosir Berkat Ibu',
-            'phone' => '(021) 1234-5678',
-            'address' => 'Jl. Pasar Grosir No. 123, Jakarta Pusat 12190',
-            'city' => 'Jakarta',
-            'province' => 'Jakarta',
-            'district' => 'Jakarta Pusat',
-            'maps_url' => null,
+            'phone' => '0812-3456-7890',
+            'address' => 'Jl. Pasar Grosir No. 123, Jakarta Pusat',
+            'city' => 'Jakarta Pusat',
+            'province' => 'DKI Jakarta',
+            'district' => 'Tanah Abang',
+            'maps_url' => 'https://maps.google.com',
+            'bank_name' => 'BCA',
+            'bank_account_number' => '8888-9999-0000',
+            'bank_account_holder' => 'CV Grosir Berkat Ibu',
         ]);
     }
 }

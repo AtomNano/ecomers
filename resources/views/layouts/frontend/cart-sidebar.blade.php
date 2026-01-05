@@ -104,10 +104,10 @@
                 <span class="text-xl font-bold text-primary-600" x-text="'Rp ' + cart.total.toLocaleString()"></span>
             </div>
             <div class="space-y-2">
-                <a href="{{ route('cart.index') }}" class="btn-outline w-full text-center block">
+                <a href="{{ route('customer.cart.index') }}" class="btn-outline w-full text-center block">
                     Lihat Keranjang
                 </a>
-                <a href="{{ route('checkout.index') }}" class="btn-primary w-full text-center block">
+                <a href="{{ route('customer.checkout.index') }}" class="btn-primary w-full text-center block">
                     Checkout
                 </a>
             </div>

@@ -13,8 +13,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $latestProducts = Product::latest()->limit(6)->get();
-        $bestSellingProducts = Product::inRandomOrder()->limit(6)->get();
+        $latestProducts = Product::latest()->limit(15)->get();
+        $bestSellingProducts = Product::inRandomOrder()->limit(15)->get();
         $categories = Category::all();
         $storeSetting = StoreSetting::first();
         
@@ -36,7 +36,7 @@ class HomeController extends Controller
     {
         $orders = auth()->user()->orders()->latest()->get();
         $totalOrders = $orders->count();
-        $totalSpent = $orders->sum('total_price');
+        $totalSpent = $orders->sum('total_amount');
         
         return view('customer.dashboard', compact('orders', 'totalOrders', 'totalSpent'));
     }

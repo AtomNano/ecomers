@@ -22,23 +22,20 @@
                 <a href="{{ route('products.index') }}" class="text-neutral-700 hover:text-primary-600 font-medium transition-colors">
                     Produk
                 </a>
-                <a href="{{ route('categories.index') }}" class="text-neutral-700 hover:text-primary-600 font-medium transition-colors">
-                    Kategori
-                </a>
-                <a href="{{ route('contact') }}" class="text-neutral-700 hover:text-primary-600 font-medium transition-colors">
-                    Kontak
+                <a href="{{ route('about') }}" class="text-neutral-700 hover:text-primary-600 font-medium transition-colors">
+                    Tentang Kami
                 </a>
             </div>
 
             <!-- Search Bar -->
             <div class="hidden lg:flex items-center flex-1 max-w-md mx-8">
-                <form action="{{ route('products.search') }}" method="GET" class="w-full">
+                <form action="{{ route('products.index') }}" method="GET" class="w-full">
                     <div class="relative">
                         <input 
                             type="text" 
-                            name="q" 
+                            name="search" 
                             placeholder="Cari produk..." 
-                            value="{{ request('q') }}"
+                            value="{{ request('search') }}"
                             class="w-full pl-10 pr-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         >
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -90,13 +87,21 @@
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-strong border border-neutral-200 py-1 z-50"
                         >
-                            <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Profil Saya</a>
-                            <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Pesanan Saya</a>
-                            <a href="{{ route('addresses.index') }}" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Alamat</a>
+                            <a href="{{ route('customer.dashboard') }}" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
+                                <i class="fas fa-user mr-2"></i>Profil Saya
+                            </a>
+                            <a href="{{ route('customer.orders') }}" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
+                                <i class="fas fa-shopping-bag mr-2"></i>Pesanan Saya
+                            </a>
+                            <a href="{{ route('customer.cart.index') }}" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
+                                <i class="fas fa-shopping-cart mr-2"></i>Keranjang
+                            </a>
                             <div class="border-t border-neutral-200 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Keluar</button>
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -125,13 +130,13 @@
 
         <!-- Mobile Search -->
         <div class="lg:hidden border-t border-neutral-200 px-4 py-3">
-            <form action="{{ route('products.search') }}" method="GET">
+            <form action="{{ route('products.index') }}" method="GET">
                 <div class="relative">
                     <input 
                         type="text" 
-                        name="q" 
+                        name="search" 
                         placeholder="Cari produk..." 
-                        value="{{ request('q') }}"
+                        value="{{ request('search') }}"
                         class="w-full pl-10 pr-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     >
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -157,16 +162,13 @@
     >
         <div class="px-4 py-2 space-y-1">
             <a href="{{ route('home') }}" class="block px-3 py-2 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
-                Beranda
+                <i class="fas fa-home mr-2"></i>Beranda
             </a>
             <a href="{{ route('products.index') }}" class="block px-3 py-2 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
-                Produk
+                <i class="fas fa-boxes mr-2"></i>Produk
             </a>
-            <a href="{{ route('categories.index') }}" class="block px-3 py-2 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
-                Kategori
-            </a>
-            <a href="{{ route('contact') }}" class="block px-3 py-2 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
-                Kontak
+            <a href="{{ route('about') }}" class="block px-3 py-2 text-neutral-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
+                <i class="fas fa-info-circle mr-2"></i>Tentang Kami
             </a>
         </div>
     </div>

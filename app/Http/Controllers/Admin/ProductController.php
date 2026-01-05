@@ -9,10 +9,35 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->paginate(15);
-        return view('admin.products.index', compact('products'));
+        $query = Product::with('category');
+        
+        // Search filter
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        
+        // Category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+        
+        // Stock filter
+        if ($request->filled('stock')) {
+            if ($request->stock === 'low') {
+                $query->where('stock', '<=', 10);
+            } elseif ($request->stock === 'medium') {
+                $query->whereBetween('stock', [11, 50]);
+            } elseif ($request->stock === 'high') {
+                $query->where('stock', '>', 50);
+            }
+        }
+        
+        $products = $query->orderBy('name')->paginate(12)->withQueryString();
+        $categories = Category::all();
+        
+        return view('admin.products.index', compact('products', 'categories'));
     }
     
     public function create()
@@ -35,10 +60,13 @@ class ProductController extends Controller
             'price_bulk_4' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
             'price_dozen' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
             
+            // Flexible quantity settings
+            'bulk_min_qty' => 'nullable|integer|min:2|max:100',
+            'box_item_count' => 'nullable|integer|min:2|max:999',
+            
             // Stock management
             'stock' => 'required|integer|min:0',
             'unit' => 'nullable|string|max:50',
-            'box_item_count' => 'nullable|integer|min:1|max:999',
             'is_featured' => 'nullable|boolean',
             
             // Image upload - max 2MB
@@ -53,6 +81,7 @@ class ProductController extends Controller
 
         // Set default jika tidak ada
         $validated['unit'] = $validated['unit'] ?? 'Pcs';
+        $validated['bulk_min_qty'] = $validated['bulk_min_qty'] ?? 4;
         $validated['box_item_count'] = $validated['box_item_count'] ?? 12;
         $validated['is_featured'] = $validated['is_featured'] ?? false;
         
@@ -96,10 +125,13 @@ class ProductController extends Controller
             'price_bulk_4' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
             'price_dozen' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
             
+            // Flexible quantity settings
+            'bulk_min_qty' => 'nullable|integer|min:2|max:100',
+            'box_item_count' => 'nullable|integer|min:2|max:999',
+            
             // Stock management
             'stock' => 'required|integer|min:0',
             'unit' => 'nullable|string|max:50',
-            'box_item_count' => 'nullable|integer|min:1|max:999',
             'is_featured' => 'nullable|boolean',
             
             // Image - optional untuk update
@@ -113,6 +145,7 @@ class ProductController extends Controller
         ]);
 
         $validated['unit'] = $validated['unit'] ?? 'Pcs';
+        $validated['bulk_min_qty'] = $validated['bulk_min_qty'] ?? 4;
         $validated['box_item_count'] = $validated['box_item_count'] ?? 12;
         $validated['is_featured'] = $validated['is_featured'] ?? false;
         

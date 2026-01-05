@@ -40,17 +40,17 @@
 </head>
 <body class="bg-gray-50" x-data="{ mobileMenuOpen: false }">
     <!-- Navigation Bar -->
-    <nav class="sticky top-0 z-50 bg-gradient-to-r from-emerald-600 to-teal-600 shadow-lg animate-slide-down">
+    <nav class="sticky top-0 z-50 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 shadow-lg animate-slide-down">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
                     <div class="bg-white p-2 rounded-lg group-hover:shadow-lg transition">
-                        <i class="fas fa-shopping-bag text-emerald-600 text-2xl"></i>
+                        <i class="fas fa-shopping-bag text-red-500 text-2xl"></i>
                     </div>
                     <div class="hidden sm:block">
                         <p class="font-bold text-white text-lg">Grosir Berkat Ibu</p>
-                        <p class="text-emerald-100 text-xs">Belanja Grosir Hemat</p>
+                        <p class="text-orange-100 text-xs">Belanja Grosir Hemat</p>
                     </div>
                 </a>
 
@@ -77,6 +77,12 @@
                         @elseif(auth()->user()->role === 'owner')
                             <a href="{{ route('owner.dashboard') }}" class="text-white hover:text-yellow-300 transition font-medium">
                                 <i class="fas fa-chart-pie"></i> Dashboard
+                            </a>
+                            <a href="{{ route('admin.products.index') }}" class="text-white hover:text-yellow-300 transition font-medium">
+                                <i class="fas fa-boxes"></i> Produk
+                            </a>
+                            <a href="{{ route('admin.orders.index') }}" class="text-white hover:text-yellow-300 transition font-medium">
+                                <i class="fas fa-shopping-cart"></i> Pesanan
                             </a>
                             <a href="{{ route('owner.reports.index') }}" class="text-white hover:text-yellow-300 transition font-medium">
                                 <i class="fas fa-file-alt"></i> Laporan
@@ -118,7 +124,7 @@
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="px-4 py-2 bg-white text-emerald-600 rounded-lg font-semibold hover:bg-yellow-400 transition">
+                        <a href="{{ route('login') }}" class="px-4 py-2 bg-white text-red-500 rounded-lg font-semibold hover:bg-yellow-400 hover:text-red-600 transition">
                             Login
                         </a>
                     @endauth
@@ -131,7 +137,7 @@
             </div>
 
             <!-- Mobile Navigation -->
-            <div v-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="lg:hidden pb-4 border-t border-emerald-500 animate-fade-in">
+            <div v-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="lg:hidden pb-4 border-t border-red-400 animate-fade-in">
                 @auth
                     @if(auth()->user()->role === 'customer')
                         <a href="{{ route('customer.products.index') }}" class="block py-2 text-white hover:text-yellow-300">
