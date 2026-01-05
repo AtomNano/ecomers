@@ -162,6 +162,7 @@
                         </div>
 
                         <!-- Action Buttons -->
+                        @if($order->status === 'pending')
                         <div class="grid grid-cols-2 gap-4">
                             <!-- Tombol Tolak -->
                             <button onclick="openRejectModal()" 
@@ -170,15 +171,20 @@
                             </button>
 
                             <!-- Tombol Terima & Proses -->
-                            <form action="{{ route('admin.orders.approve', $order->id) }}" method="POST" class="contents">
+                            <form action="{{ route('admin.orders.approve', $order->id) }}" method="POST" class="w-full">
                                 @csrf
                                 <button type="submit" 
-                                        onclick="return confirm('⚠️ PERHATIAN!\n\nAnda yakin bukti pembayaran ini VALID?\n\n✅ Saat Anda klik OK:\n- Stok barang akan berkurang PERMANEN\n- Status berubah menjadi PAID\n- Notif otomatis dikirim ke WA customer\n\nJangan cancel jika ragu!')"
-                                        class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg hover:from-green-600 hover:to-emerald-700 transition shadow-md flex items-center justify-center gap-2 border-2 border-green-600">
+                                        onclick="return confirm('Yakin ingin menerima pembayaran ini? Stok akan berkurang.')"
+                                        class="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg hover:from-green-600 hover:to-emerald-700 transition shadow-md flex items-center justify-center gap-2 border-2 border-green-600">
                                     <span class="text-xl">✅</span> Terima & Proses
                                 </button>
                             </form>
                         </div>
+                        @else
+                        <div class="p-4 bg-gray-100 rounded text-center text-gray-500 font-semibold border-2 border-dashed border-gray-300">
+                            Aksi tidak tersedia (Status: {{ ucfirst($order->status) }})
+                        </div>
+                        @endif
 
                         <!-- Info Stok -->
                         <div class="p-4 bg-blue-50 rounded-lg border border-blue-200 text-sm">
@@ -219,7 +225,7 @@
 
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Alasan Penolakan *</label>
-                <textarea name="admin_note" 
+                <textarea name="reason" 
                           rows="4" 
                           class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none resize-none text-sm"
                           placeholder="Contoh:

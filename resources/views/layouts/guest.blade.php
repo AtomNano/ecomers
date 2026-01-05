@@ -21,6 +21,8 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #ff5722; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #e64a19; }
+        
+        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased" x-data="{ mobileMenuOpen: false, searchOpen: false }">
@@ -232,21 +234,21 @@
     
     <!-- Flash Messages -->
     @if(session('success'))
-    <div class="fixed top-20 right-4 z-50 animate-bounce" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)">
-        <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3">
+    <div class="fixed top-20 right-4 z-50 animate-bounce pointer-events-none" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 4000)" x-cloak>
+        <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3 pointer-events-auto">
             <i class="fas fa-check-circle text-xl"></i>
             <span>{{ session('success') }}</span>
-            <button @click="show = false" class="ml-2"><i class="fas fa-times"></i></button>
+            <button @click="show = false" class="ml-2 hover:text-green-200"><i class="fas fa-times"></i></button>
         </div>
     </div>
     @endif
     
     @if(session('error'))
-    <div class="fixed top-20 right-4 z-50" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)">
-        <div class="bg-red-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3">
+    <div class="fixed top-20 right-4 z-50 pointer-events-none" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 4000)" x-cloak>
+        <div class="bg-red-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3 pointer-events-auto">
             <i class="fas fa-exclamation-circle text-xl"></i>
             <span>{{ session('error') }}</span>
-            <button @click="show = false" class="ml-2"><i class="fas fa-times"></i></button>
+            <button @click="show = false" class="ml-2 hover:text-red-200"><i class="fas fa-times"></i></button>
         </div>
     </div>
     @endif

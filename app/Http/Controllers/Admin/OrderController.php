@@ -43,9 +43,18 @@ class OrderController extends Controller
     }
     
     /**
-     * Display order untuk approval (dari AdminOrderController)
+     * Display order detail (Read-only / Shipping / Completion)
      */
     public function show($id)
+    {
+        $order = Order::with(['user', 'items.product', 'payment'])->findOrFail($id);
+        return view('admin.orders.show', compact('order'));
+    }
+
+    /**
+     * Display verification page
+     */
+    public function verify($id)
     {
         $order = Order::with(['user', 'items.product', 'payment'])->findOrFail($id);
         return view('admin.orders.verify', compact('order'));
@@ -86,7 +95,8 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.dashboard')->with('success', 'Pembayaran diverifikasi dan stok berkurang permanen.');
+            return redirect()->route('admin.orders.show', $order->id)
+                ->with('success', 'Pembayaran diverifikasi. Stok berkurang. Silakan proses pengiriman.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -107,10 +117,12 @@ class OrderController extends Controller
      * - Increment stok kembali untuk setiap item
      * - Update payment & order status secara atomic
      */
-    public function reject(Order $order, Request $request)
+    public function reject(Request $request, $id)
     {
         $request->validate(['reason' => 'required|string|min:5']);
         
+        $order = Order::with('payment')->findOrFail($id);
+
         if ($order->payment->status !== 'pending') {
             return back()->with('error', 'Pembayaran sudah diverifikasi');
         }

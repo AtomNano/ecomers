@@ -37,18 +37,18 @@
                             <p class="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Kategori</p>
                             @php
                                 $icons = [
-                                    'sayur' => 'fas fa-carrot text-orange-500',
-                                    'buah' => 'fas fa-apple-alt text-red-500',
                                     'bumbu' => 'fas fa-mortar-pestle text-stone-500',
-                                    'beras' => 'fas fa-seedling text-green-600',
-                                    'gandum' => 'fas fa-wheat text-yellow-600',
                                     'minyak' => 'fas fa-bottle-droplet text-yellow-500',
-                                    'susu' => 'fas fa-glass-water text-blue-400', 
-                                    'kaleng' => 'fas fa-box text-gray-500',
-                                    'daging' => 'fas fa-drumstick-bite text-amber-700',
-                                    'ikan' => 'fas fa-fish text-blue-500',
-                                    'snack' => 'fas fa-cookie text-amber-500',
-                                    'minuman' => 'fas fa-coffee text-amber-800',
+                                    'beras' => 'fas fa-bowl-rice text-white bg-orange-400 rounded-full p-1', // Custom style
+                                    'mie' => 'fas fa-bowl-food text-yellow-600',
+                                    'minuman' => 'fas fa-mug-hot text-amber-800',
+                                    'snack' => 'fas fa-cookie-bite text-orange-500',
+                                    'kaleng' => 'fas fa-box-open text-gray-500',
+                                    'perawatan' => 'fas fa-pump-soap text-pink-500',
+                                    'rumah' => 'fas fa-house-chimney text-blue-500',
+                                    'kesehatan' => 'fas fa-heart-pulse text-red-600',
+                                    'sayur' => 'fas fa-carrot text-orange-500', // Keep just in case
+                                    'buah' => 'fas fa-apple-alt text-red-500',
                                 ];
                                 
                                 function getCategoryIcon($name, $icons) {

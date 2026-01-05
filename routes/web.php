@@ -89,7 +89,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Order Management
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
-    Route::get('/orders/{id}/verify', [OrderController::class, 'show'])->name('admin.orders.verify');
+    Route::get('/orders/{id}/verify', [OrderController::class, 'verify'])->name('admin.orders.verify');
     Route::post('/orders/{id}/approve', [OrderController::class, 'approve'])->name('admin.orders.approve');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('admin.orders.reject');
     Route::post('/orders/{order}/ship', [OrderController::class, 'ship'])->name('admin.orders.ship');

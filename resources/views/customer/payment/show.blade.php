@@ -116,10 +116,20 @@
         </form>
 
         <!-- Info Box -->
-        <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <p class="text-xs text-blue-800">
-                <strong>💡 Tips:</strong> Pastikan struk/screenshot jelas terlihat nomor referensi dan nominal. Verifikasi admin membutuhkan waktu maksimal 1x24 jam.
-            </p>
+        <div class="mt-4 space-y-4">
+            @if($payment->proof_image)
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <p class="text-sm font-semibold text-gray-700 mb-2">📸 Bukti yang Diupload:</p>
+                <img src="{{ asset('storage/' . $payment->proof_image) }}" alt="Bukti Transfer" class="w-full max-h-64 object-contain rounded border bg-white">
+                <p class="text-xs text-gray-500 mt-2">Anda dapat mengupload ulang jika ingin mengganti bukti transfer.</p>
+            </div>
+            @endif
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <p class="text-xs text-blue-800">
+                    <strong>💡 Tips:</strong> Pastikan struk/screenshot jelas terlihat nomor referensi dan nominal. Verifikasi admin membutuhkan waktu maksimal 1x24 jam.
+                </p>
+            </div>
         </div>
     </div>
     @elseif($payment->status === 'verified')
