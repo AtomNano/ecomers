@@ -48,9 +48,9 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Public Order/Payment Routes (No auth required for display, but checks order ownership)
-Route::get('/orders/{invoice_number}/payment', [OrderController::class, 'showPayment'])->name('orders.payment');
+Route::get('/orders/{invoice_number}/payment', [OrderController::class, 'showPayment'])->name('orders.payment')->where('invoice_number', '.*');
 Route::post('/orders/{id}/upload-proof', [OrderController::class, 'uploadProof'])->name('orders.upload');
-Route::get('/orders/{invoice_number}/success', [OrderController::class, 'showSuccess'])->name('orders.success');
+Route::get('/orders/{invoice_number}/success', [OrderController::class, 'showSuccess'])->name('orders.success')->where('invoice_number', '.*');
 
 // Customer Routes
 Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
