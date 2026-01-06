@@ -21,6 +21,7 @@ use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 // Public Routes
 Route::get('/', [CustomerHomeController::class, 'index'])->name('home');
 Route::get('/about', [CustomerHomeController::class, 'about'])->name('about');
+Route::get('/contact', [CustomerHomeController::class, 'contact'])->name('contact');
 
 // Public Products - Dapat diakses tanpa login
 Route::get('/products', [CustomerProductController::class, 'publicIndex'])->name('products.index');

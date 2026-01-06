@@ -252,10 +252,10 @@
                             <i class="fas fa-phone text-emerald-400"></i> +62 812-3456-7890
                         </li>
                         <li class="flex items-center gap-2">
-                            <i class="fas fa-envelope text-emerald-400"></i> support@grosir.com
+                            <i class="fas fa-envelope text-emerald-400"></i> info@grosirberkatibu.com
                         </li>
                         <li class="flex items-center gap-2">
-                            <i class="fas fa-map-marker-alt text-emerald-400"></i> Jakarta, Indonesia
+                            <i class="fas fa-map-marker-alt text-emerald-400"></i> Jl.timur, Ulak Karang Utara, Kec. Padang Utara, Kota Padang, Sumatera Barat 25000
                         </li>
                     </ul>
                 </div>
