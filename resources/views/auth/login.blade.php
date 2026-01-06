@@ -10,13 +10,16 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; overflow: hidden; }
+        /* Allow natural scrolling on mobile */
+        @media (min-width: 1024px) {
+            html, body { height: 100%; overflow: hidden; }
+        }
     </style>
 </head>
-<body class="h-screen overflow-hidden" x-data="{ showRegister: {{ request()->routeIs('register') ? 'true' : 'false' }} }">
+<body class="min-h-screen" x-data="{ showRegister: {{ request()->routeIs('register') ? 'true' : 'false' }} }">
     
     <!-- Full Screen Container -->
-    <div class="h-screen w-screen flex overflow-hidden">
+    <div class="min-h-screen w-full flex lg:h-screen lg:overflow-hidden">
         
         <!-- Left Panel - Branding (Hidden on mobile, visible on lg+) -->
         <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 relative">
@@ -99,8 +102,8 @@
             </div>
             
             <!-- Form Container -->
-            <div class="flex-1 flex items-center justify-center p-6 lg:p-12 overflow-y-auto">
-                <div class="w-full max-w-md">
+            <div class="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 lg:p-12 lg:overflow-y-auto">
+                <div class="w-full max-w-md my-auto">
                     
                     <!-- Login Form -->
                     <div x-show="!showRegister" 
@@ -153,10 +156,10 @@
                                 @enderror
                             </div>
                             
-                            <div class="flex items-center justify-between">
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <label class="flex items-center cursor-pointer">
                                     <input type="checkbox" name="remember" class="w-5 h-5 text-red-500 border-2 border-gray-300 rounded focus:ring-red-500">
-                                    <span class="ml-2 text-gray-600">Ingat saya</span>
+                                    <span class="ml-2 text-gray-600 text-sm sm:text-base">Ingat saya</span>
                                 </label>
                                 <a href="{{ route('forgot-password') }}" class="text-red-500 hover:text-red-600 font-medium text-sm">
                                     Lupa password?
