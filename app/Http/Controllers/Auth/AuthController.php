@@ -24,17 +24,18 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ];
 
-        // Check for Dev Quick Login Bypass
+        // Determine if captcha should be enforced
         $isDevBypass = app()->isLocal() && $request->has('bypass_captcha');
+        $captchaEnabled = !empty(config('turnstile.turnstile_site_key')) && !empty(config('turnstile.turnstile_secret_key'));
 
-        if (!$isDevBypass) {
+        if ($captchaEnabled && !$isDevBypass) {
             $rules['cf-turnstile-response'] = 'required';
         }
 
         $validated = $request->validate($rules);
 
-        // Validate Turnstile captcha (unless bypassed in dev)
-        if (!$isDevBypass && !Turnstile::validate($request->input('cf-turnstile-response'))) {
+        // Validate Turnstile captcha only when enabled (and not bypassed)
+        if ($captchaEnabled && !$isDevBypass && !Turnstile::validate($request->input('cf-turnstile-response'))) {
             return back()->withErrors(['captcha' => 'Captcha validation failed. Please try again.'])->withInput();
         }
         

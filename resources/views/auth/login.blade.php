@@ -7,7 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @if(config('turnstile.turnstile_site_key'))
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    @endif
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         /* Allow natural scrolling on mobile */
@@ -167,9 +169,11 @@
                             </div>
                             
                             <!-- Cloudflare Turnstile Captcha -->
+                            @if(config('turnstile.turnstile_site_key'))
                             <div class="flex justify-center">
                                 <div class="cf-turnstile" data-sitekey="{{ config('turnstile.turnstile_site_key') }}"></div>
                             </div>
+                            @endif
                             @error('captcha')
                                 <p class="text-red-500 text-sm text-center"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
                             @enderror

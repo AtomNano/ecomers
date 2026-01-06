@@ -14,16 +14,17 @@ class RealProductSeeder extends Seeder
 {
     public function run()
     {
-        // 1. Reset Database tables
-        Schema::disableForeignKeyConstraints();
-        
-        DB::table('order_items')->truncate();
-        DB::table('orders')->truncate();
-        DB::table('products')->truncate();
-        DB::table('categories')->truncate();
-        DB::table('carts')->truncate();
-        
-        Schema::enableForeignKeyConstraints();
+        // Run destructive reset ONLY in local environment
+        $isLocal = app()->isLocal();
+        if ($isLocal) {
+            Schema::disableForeignKeyConstraints();
+            DB::table('order_items')->truncate();
+            DB::table('orders')->truncate();
+            DB::table('products')->truncate();
+            DB::table('categories')->truncate();
+            DB::table('carts')->truncate();
+            Schema::enableForeignKeyConstraints();
+        }
 
         // 2. Create Categories
         $categories = [
@@ -40,10 +41,11 @@ class RealProductSeeder extends Seeder
 
         $catMap = [];
         foreach ($categories as $name => $data) {
-            $catMap[$name] = Category::create([
-                'name' => $name,
-                'description' => $data['description']
-            ]);
+            $cat = Category::updateOrCreate(
+                ['name' => $name],
+                ['description' => $data['description']]
+            );
+            $catMap[$name] = $cat;
         }
 
         // 3. Define Product Mapping (Filename -> Data)
@@ -146,7 +148,10 @@ class RealProductSeeder extends Seeder
                 $categoryName = $data[1];
                 $categoryId = $catMap[$categoryName]->id;
 
-                Product::create([
+                Product::updateOrCreate([
+                    'name' => $data[0],
+                    'category_id' => $categoryId,
+                ], [
                     'category_id' => $categoryId,
                     'name' => $data[0],
                     'description' => 'Produk berkualitas ' . $data[0] . '. Tersedia dalam harga satuan dan grosir.',
@@ -164,7 +169,10 @@ class RealProductSeeder extends Seeder
                 $catId = $catMap['Perlengkapan Rumah']->id; // default
                 if(stripos($file, 'food')!==false || stripos($file, 'makan')!==false) $catId = $catMap['Snack & Camilan']->id;
 
-                Product::create([
+                Product::updateOrCreate([
+                    'name' => $cleanedName,
+                    'category_id' => $catId,
+                ], [
                     'category_id' => $catId,
                     'name' => $cleanedName,
                     'description' => 'Produk ' . $cleanedName,
