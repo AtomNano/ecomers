@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             UserSeeder::class,
             StoreSettingSeeder::class,
-            DummyDataSeeder::class,
+            // DummyDataSeeder::class, // Disabled for now
         ]);
     }
 }
