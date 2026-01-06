@@ -141,25 +141,28 @@
             <a href="{{ route('home') }}?category={{ $category->id }}#products" class="group text-center">
                 <div class="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-6 mb-3 group-hover:shadow-lg group-hover:from-red-100 group-hover:to-orange-100 transition-all transform group-hover:scale-105">
                     <div class="w-16 h-16 mx-auto bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center text-white text-2xl shadow-md group-hover:shadow-lg transition">
-                        @switch(strtolower($category->name))
-                            @case('makanan')
-                                <i class="fas fa-utensils"></i>
-                                @break
-                            @case('minuman')
-                                <i class="fas fa-coffee"></i>
-                                @break
-                            @case('elektronik')
-                                <i class="fas fa-tv"></i>
-                                @break
-                            @case('pakaian')
-                                <i class="fas fa-tshirt"></i>
-                                @break
-                            @case('kesehatan')
-                                <i class="fas fa-heartbeat"></i>
-                                @break
-                            @default
-                                <i class="fas fa-box"></i>
-                        @endswitch
+                            @switch(strtolower($category->name))
+                                @case('sembako')
+                                    <i class="fas fa-seedling"></i>
+                                    @break
+                                @case('perlengkapan toko')
+                                    <i class="fas fa-store-alt"></i>
+                                    @break
+                                @case('makanan')
+                                    <i class="fas fa-utensils"></i>
+                                    @break
+                                @case('minuman')
+                                    <i class="fas fa-coffee"></i>
+                                    @break
+                                @case('snack')
+                                    <i class="fas fa-cookie-bite"></i>
+                                    @break
+                                @case('bumbu')
+                                    <i class="fas fa-pepper-hot"></i>
+                                    @break
+                                @default
+                                    <i class="fas fa-box-open"></i>
+                            @endswitch
                     </div>
                 </div>
                 <p class="text-sm font-medium text-gray-700 group-hover:text-red-500 transition">{{ $category->name }}</p>
@@ -356,7 +359,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Alamat</p>
-                            <p class="font-medium">{{ $storeSetting->address ?? 'Jakarta, Indonesia' }}</p>
+                            <p class="font-medium">Jl.timur, Ulak Karang Utara, Kec. Padang Utara, Kota Padang, Sumatera Barat 25000</p>
                         </div>
                     </div>
                     
@@ -366,7 +369,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">WhatsApp</p>
-                            <p class="font-medium">{{ $storeSetting->phone ?? '+62 812-3456-7890' }}</p>
+                            <p class="font-medium">0812-3456-7890</p>
                         </div>
                     </div>
                     
@@ -376,7 +379,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Jam Operasional</p>
-                            <p class="font-medium">Senin - Sabtu, 08:00 - 17:00</p>
+                            <p class="font-medium">Senin - Sabtu, 07:00 - 17:45</p>
                         </div>
                     </div>
                 </div>
@@ -397,9 +400,8 @@
             
             <!-- Map Placeholder -->
             <div class="bg-gray-700 rounded-2xl h-80 overflow-hidden shadow-2xl">
-                @if($storeSetting && $storeSetting->maps_url)
                 <iframe 
-                    src="{{ str_replace('/maps/', '/maps/embed?pb=', $storeSetting->maps_url) }}" 
+                    src="https://maps.google.com/maps?width=100%25&height=600&hl=en&q=Grosir%20Berkat%20Ibu&t=&z=14&ie=UTF8&iwloc=B&output=embed" 
                     width="100%" 
                     height="100%" 
                     style="border:0;" 
@@ -407,14 +409,6 @@
                     loading="lazy"
                     class="grayscale hover:grayscale-0 transition-all duration-500">
                 </iframe>
-                @else
-                <div class="w-full h-full flex items-center justify-center text-gray-500">
-                    <div class="text-center">
-                        <i class="fas fa-map-marked-alt text-5xl mb-3"></i>
-                        <p>Lokasi Toko</p>
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
     </div>

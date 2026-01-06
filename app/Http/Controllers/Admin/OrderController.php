@@ -221,8 +221,8 @@ class OrderController extends Controller
         }
 
         if ($request->hasFile('payment_proof')) {
-            // Simpan di storage/app/public/payment_proofs
-            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+            // Simpan di storage/app/public/payments
+            $path = $request->file('payment_proof')->store('payments', 'public');
             
             $order->update([
                 'payment_proof' => $path,

@@ -46,4 +46,9 @@ class HomeController extends Controller
         $orders = auth()->user()->orders()->latest()->paginate(10);
         return view('customer.orders', compact('orders'));
     }
+
+    public function contact()
+    {
+        return view('frontend.pages.contact');
+    }
 }
