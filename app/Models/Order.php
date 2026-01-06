@@ -12,6 +12,7 @@ class Order extends Model
         'shipping_cost',
         'shipping_method',
         'status',
+        'payment_status',
         'customer_name',
         'customer_phone',
         'customer_address',
