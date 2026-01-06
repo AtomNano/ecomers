@@ -38,6 +38,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('forgot-password-send');
     Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showReset'])->name('reset-password');
     Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('reset-password-submit');
+    
+    // Google OAuth Routes
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
