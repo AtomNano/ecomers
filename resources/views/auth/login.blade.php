@@ -354,7 +354,16 @@
         function quickLogin(email, password) {
             document.querySelector('input[name="email"]').value = email;
             document.querySelector('input[name="password"]').value = password;
-            document.querySelector('form').submit();
+            
+            // Bypass Captcha for Quick Login (Dev only)
+            const form = document.querySelector('form');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'bypass_captcha';
+            input.value = '1';
+            form.appendChild(input);
+            
+            form.submit();
         }
         
         function togglePassword(inputId, iconId) {

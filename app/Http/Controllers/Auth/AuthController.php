@@ -19,14 +19,22 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             'email' => 'required|email',
             'password' => 'required|min:6',
-            'cf-turnstile-response' => 'required',
-        ]);
+        ];
 
-        // Validate Turnstile captcha
-        if (!Turnstile::validate($request->input('cf-turnstile-response'))) {
+        // Check for Dev Quick Login Bypass
+        $isDevBypass = app()->isLocal() && $request->has('bypass_captcha');
+
+        if (!$isDevBypass) {
+            $rules['cf-turnstile-response'] = 'required';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Validate Turnstile captcha (unless bypassed in dev)
+        if (!$isDevBypass && !Turnstile::validate($request->input('cf-turnstile-response'))) {
             return back()->withErrors(['captcha' => 'Captcha validation failed. Please try again.'])->withInput();
         }
         
