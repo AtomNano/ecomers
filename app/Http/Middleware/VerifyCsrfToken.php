@@ -14,6 +14,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         // Add routes that should bypass CSRF check for development
+        'midtrans/callback',
     ];
 
     /**

@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\StoreSetting;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class CheckoutController extends Controller
 {
@@ -58,7 +60,7 @@ class CheckoutController extends Controller
     {
         $validated = $request->validate([
             'shipping_method' => 'required|in:gosend,pickup,custom',
-            'payment_method' => 'required|in:transfer,qris',
+            'payment_method' => 'required|in:transfer,qris,midtrans',
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
             'customer_address' => 'required|string|max:500',
@@ -157,6 +159,42 @@ class CheckoutController extends Controller
                 'amount' => $totalAmount,
             ]);
             
+            // ===== MIDTRANS INTEGRATION =====
+            // Set konfigurasi Midtrans
+            Config::$serverKey = config('midtrans.server_key');
+            Config::$isProduction = config('midtrans.is_production');
+            Config::$isSanitized = config('midtrans.is_sanitized');
+            Config::$is3ds = config('midtrans.is_3ds');
+            
+            // FIX: Bypass SSL verification for local development (cURL error 60)
+            if (config('app.env') === 'local') {
+                Config::$curlOptions = [CURLOPT_SSL_VERIFYPEER => false];
+            }
+
+            // Buat params untuk Snap
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $order->invoice_number, // Gunakan invoice sebagai ID di Midtrans
+                    'gross_amount' => (int) $totalAmount,
+                ],
+                'customer_details' => [
+                    'first_name' => $validated['customer_name'],
+                    'email' => auth()->user()->email,
+                    'phone' => $validated['customer_phone'],
+                ],
+            ];
+
+            try {
+                // Ambil Snap Token
+                $snapToken = Snap::getSnapToken($params);
+                $order->update(['snap_token' => $snapToken]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Midtrans Error: ' . $e->getMessage());
+                // Jangan throw error, biarkan order terbuat tapi tanpa token
+                // Tapi kasih info ke user
+                session()->flash('error', 'Gagal memuat pembayaran otomatis (Midtrans Error). Silakan hubungi admin.');
+            }
+            
             // STEP 6: Clear cart
             auth()->user()->carts()->delete();
             
@@ -173,8 +211,14 @@ class CheckoutController extends Controller
             \Illuminate\Support\Facades\Log::error('Notification Error: ' . $e->getMessage());
         }
 
-        // Redirect ke payment upload page
-        return redirect()->route('customer.payment.show', $order)
+        // Redirect ke payment page khusus Midtrans jika ada token
+        if ($order->snap_token) {
+            return redirect()->route('orders.payment', $order->invoice_number)
+                           ->with('success', 'Pesanan berhasil dibuat. Silakan selesaikan pembayaran.');
+        }
+
+        // Fallback ke manual jika token gagal
+        return redirect()->route('orders.payment', $order->invoice_number)
                        ->with('success', 'Pesanan berhasil dibuat. Silakan upload bukti pembayaran.');
     }
     

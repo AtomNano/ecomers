@@ -138,6 +138,31 @@ x-init="$watch('shippingMethod', value => shippingCost = value === 'gosend' ? 15
                         </h2>
 
                          <div class="space-y-4">
+                            <!-- Midtrans Option (Automated) -->
+                            <div>
+                                <label class="flex items-start justify-between border-2 rounded-xl p-4 cursor-pointer hover:bg-indigo-50 transition select-none"
+                                       :class="paymentMethod === 'midtrans' ? 'border-indigo-500 bg-indigo-50/50' : 'border-gray-200'">
+                                    <div class="flex items-start gap-3">
+                                        <input type="radio" name="payment_method" value="midtrans" x-model="paymentMethod" class="mt-1 text-indigo-500 focus:ring-indigo-500">
+                                        <div>
+                                            <span class="font-bold text-gray-800 block">Otomatis (Midtrans)</span>
+                                            <span class="text-xs text-indigo-600 font-semibold bg-indigo-100 px-2 py-0.5 rounded-full">Disarankan</span>
+                                            <p class="text-xs text-gray-500 mt-1">QRIS instan, GoPay, ShopeePay, Virtual Account, & Kartu Kredit.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end gap-1">
+                                        <i class="fas fa-bolt text-yellow-500"></i>
+                                        <p class="text-[10px] text-gray-400">Verifikasi Otomatis</p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="relative py-2 flex items-center">
+                                <div class="flex-grow border-t border-gray-200"></div>
+                                <span class="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase tracking-wider">Atau Manual</span>
+                                <div class="flex-grow border-t border-gray-200"></div>
+                            </div>
+
                             <!-- Transfer Option -->
                             <div>
                                 <label class="flex items-center justify-between border-2 rounded-xl p-4 cursor-pointer hover:bg-gray-50 transition select-none"
@@ -146,7 +171,7 @@ x-init="$watch('shippingMethod', value => shippingCost = value === 'gosend' ? 15
                                         <input type="radio" name="payment_method" value="transfer" x-model="paymentMethod" class="text-red-500 focus:ring-red-500">
                                         <div>
                                             <span class="font-bold text-gray-700 block">Transfer Bank</span>
-                                            <span class="text-xs text-gray-500">Cek manual oleh admin</span>
+                                            <span class="text-xs text-gray-500">Cek manual oleh admin (1x24 jam)</span>
                                         </div>
                                     </div>
                                     <i class="fas fa-university text-gray-400 text-xl"></i>
@@ -187,8 +212,8 @@ x-init="$watch('shippingMethod', value => shippingCost = value === 'gosend' ? 15
                                     <div class="flex items-center gap-3">
                                         <input type="radio" name="payment_method" value="qris" x-model="paymentMethod" class="text-red-500 focus:ring-red-500">
                                         <div>
-                                            <span class="font-bold text-gray-700 block">QRIS</span>
-                                            <span class="text-xs text-gray-500">Scan barcode instan</span>
+                                            <span class="font-bold text-gray-700 block">QRIS Manual</span>
+                                            <span class="text-xs text-gray-500">Scan barcode toko & upload bukti</span>
                                         </div>
                                     </div>
                                     <i class="fas fa-qrcode text-gray-400 text-xl"></i>
