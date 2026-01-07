@@ -37,8 +37,8 @@
                 <div class="p-6">
                     <!-- Foto Bukti Bayar - Zoomable -->
                     <div class="relative group mb-6">
-                        @if($order->payment && $order->payment->proof_image)
-                            <img src="{{ asset('storage/' . $order->payment->proof_image) }}" 
+                        @if($order->payment_proof)
+                            <img src="{{ asset('storage/' . $order->payment_proof) }}" 
                                  alt="Bukti Bayar" 
                                  class="w-full h-auto rounded-lg border-4 border-gray-200 cursor-zoom-in transition-transform duration-300 transform group-hover:scale-105 shadow-md"
                                  onclick="window.open(this.src, '_blank')">
@@ -48,7 +48,7 @@
                             </div>
                         @else
                             <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                                <p class="text-gray-500">Bukti pembayaran tidak tersedia</p>
+                                <p class="text-gray-500">Bukti pembayaran belum diupload</p>
                             </div>
                         @endif
                     </div>

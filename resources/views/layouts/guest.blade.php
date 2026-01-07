@@ -320,7 +320,7 @@
                     <ul class="space-y-3 text-gray-400">
                         <li class="flex items-start gap-3">
                             <i class="fas fa-map-marker-alt text-red-400 mt-1"></i>
-                            <span>Jakarta, Indonesia</span>
+                            <span>Jl.timur, Ulak Karang Utara, Kec. Padang Utara, Kota Padang, Sumatera Barat 25000</span>
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fas fa-phone text-red-400"></i>
@@ -332,7 +332,7 @@
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fas fa-clock text-red-400"></i>
-                            <span>Senin - Sabtu, 08:00 - 17:00</span>
+                            <span>Senin - Sabtu, 07:00 - 17:45</span>
                         </li>
                     </ul>
                 </div>

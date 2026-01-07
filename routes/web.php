@@ -21,6 +21,7 @@ use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 // Public Routes
 Route::get('/', [CustomerHomeController::class, 'index'])->name('home');
 Route::get('/about', [CustomerHomeController::class, 'about'])->name('about');
+Route::get('/contact', [CustomerHomeController::class, 'contact'])->name('contact');
 
 // Public Products - Dapat diakses tanpa login
 Route::get('/products', [CustomerProductController::class, 'publicIndex'])->name('products.index');
@@ -38,14 +39,20 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('forgot-password-send');
     Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showReset'])->name('reset-password');
     Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('reset-password-submit');
+    
+    // Google OAuth Routes
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Public Order/Payment Routes (No auth required for display, but checks order ownership)
-Route::get('/orders/{invoice_number}/payment', [OrderController::class, 'showPayment'])->name('orders.payment');
+Route::get('/orders/{invoice_number}/payment', [OrderController::class, 'showPayment'])->name('orders.payment')->where('invoice_number', '.*');
 Route::post('/orders/{id}/upload-proof', [OrderController::class, 'uploadProof'])->name('orders.upload');
-Route::get('/orders/{invoice_number}/success', [OrderController::class, 'showSuccess'])->name('orders.success');
+Route::get('/orders/{invoice_number}/success', [OrderController::class, 'showSuccess'])->name('orders.success')->where('invoice_number', '.*');
+// Midtrans Webhook
+Route::post('/midtrans/callback', [\App\Http\Controllers\Customer\MidtransController::class, 'notificationHandler'])->name('midtrans.callback');
 
 // Customer Routes
 Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {

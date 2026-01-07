@@ -4,39 +4,65 @@
 @section('description', 'Hubungi kami untuk informasi lebih lanjut tentang produk dan layanan Grosir Berkat Ibu.')
 
 @section('content')
-<div class="bg-white">
-    <div class="container-custom section-padding">
-        <!-- Header -->
-        <div class="text-center mb-16">
-            <h1 class="text-4xl font-bold text-neutral-900 mb-6">Hubungi Kami</h1>
-            <p class="text-xl text-neutral-600 max-w-3xl mx-auto">
-                Ada pertanyaan atau butuh bantuan? Tim customer service kami siap membantu Anda 24/7
-            </p>
-        </div>
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 py-20 pb-32 overflow-hidden">
+    <!-- Animated Background Shapes -->
+    <div class="absolute inset-0">
+        <div class="absolute top-10 left-10 w-32 h-32 bg-yellow-300 opacity-20 rounded-full animate-bounce" style="animation-duration: 3s;"></div>
+        <div class="absolute bottom-20 right-20 w-48 h-48 bg-white opacity-10 rounded-full animate-pulse"></div>
+        <div class="absolute top-1/2 left-1/3 w-24 h-24 bg-orange-300 opacity-15 rounded-full animate-ping" style="animation-duration: 2s;"></div>
+    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <div class="container mx-auto px-4 relative z-10 text-center text-white">
+        <h1 class="text-4xl md:text-5xl font-black mb-6">Hubungi Kami</h1>
+        <p class="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
+            Ada pertanyaan atau butuh bantuan? Tim customer service kami siap membantu Anda 24/7 untuk kebutuhan bisnis grosir Anda.
+        </p>
+    </div>
+    
+    <!-- Wave Divider -->
+    <div class="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#f9fafb"/>
+        </svg>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<div class="bg-gray-50 min-h-screen relative z-10 -mt-20 pb-20">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            
             <!-- Contact Form -->
-            <div class="card p-8">
-                <h2 class="text-2xl font-bold text-neutral-900 mb-6">Kirim Pesan</h2>
+            <div class="bg-white rounded-3xl shadow-xl p-8 lg:p-10 animate-fade-in-left">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-500 text-xl">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Kirim Pesan</h2>
+                        <p class="text-gray-500 text-sm">Kami akan membalas secepatnya</p>
+                    </div>
+                </div>
                 
                 <form class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 mb-2">Nama Lengkap *</label>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
                             <input 
                                 type="text" 
                                 name="name"
-                                class="input-field"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-gray-200 focus:border-red-500 focus:bg-white focus:ring-red-200 transition duration-200"
                                 placeholder="Masukkan nama lengkap"
                                 required
                             >
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 mb-2">Email *</label>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Email <span class="text-red-500">*</span></label>
                             <input 
                                 type="email" 
                                 name="email"
-                                class="input-field"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border-gray-200 focus:border-red-500 focus:bg-white focus:ring-red-200 transition duration-200"
                                 placeholder="contoh@email.com"
                                 required
                             >
@@ -44,18 +70,18 @@
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-neutral-700 mb-2">Telepon</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Telepon</label>
                         <input 
                             type="tel" 
                             name="phone"
-                            class="input-field"
+                            class="w-full px-4 py-3 rounded-xl bg-gray-50 border-gray-200 focus:border-red-500 focus:bg-white focus:ring-red-200 transition duration-200"
                             placeholder="08xxxxxxxxxx"
                         >
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-neutral-700 mb-2">Subjek *</label>
-                        <select name="subject" class="input-field" required>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Subjek <span class="text-red-500">*</span></label>
+                        <select name="subject" class="w-full px-4 py-3 rounded-xl bg-gray-50 border-gray-200 focus:border-red-500 focus:bg-white focus:ring-red-200 transition duration-200" required>
                             <option value="">Pilih subjek</option>
                             <option value="general">Pertanyaan Umum</option>
                             <option value="product">Informasi Produk</option>
@@ -67,112 +93,114 @@
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-neutral-700 mb-2">Pesan *</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Pesan <span class="text-red-500">*</span></label>
                         <textarea 
                             name="message" 
                             rows="5"
-                            class="input-field"
+                            class="w-full px-4 py-3 rounded-xl bg-gray-50 border-gray-200 focus:border-red-500 focus:bg-white focus:ring-red-200 transition duration-200"
                             placeholder="Tuliskan pesan Anda di sini..."
                             required
                         ></textarea>
                     </div>
                     
-                    <button type="submit" class="btn-primary w-full">
-                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                        </svg>
-                        Kirim Pesan
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold rounded-full shadow-lg transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Kirim Pesan
                     </button>
                 </form>
             </div>
 
-            <!-- Contact Information -->
-            <div class="space-y-8">
-                <!-- Office Info -->
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">Informasi Kantor</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <svg class="h-5 w-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
+            <!-- Info & Map -->
+            <div class="space-y-8 animate-fade-in-right">
+                
+                <!-- Info Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+                    <!-- Address Card -->
+                    <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-red-500 hover:shadow-lg transition">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-500 text-xl flex-shrink-0">
+                                <i class="fas fa-map-marker-alt"></i>
                             </div>
                             <div>
-                                <h4 class="font-medium text-neutral-900">Alamat</h4>
-                                <p class="text-neutral-600">Jl. Raya No. 123, Jakarta Selatan<br>DKI Jakarta 12345</p>
+                                <h3 class="font-bold text-gray-800 text-lg mb-2">Alamat Kantor</h3>
+                                <p class="text-gray-600 leading-relaxed">
+                                    Jl.timur, Ulak Karang Utara, Kec. Padang Utara,<br>
+                                    Kota Padang, Sumatera Barat 25000
+                                </p>
                             </div>
                         </div>
-                        
-                        <div class="flex items-start space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <svg class="h-5 w-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                </svg>
+                    </div>
+
+                    <!-- Contact Card -->
+                    <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xl flex-shrink-0">
+                                <i class="fab fa-whatsapp"></i>
                             </div>
                             <div>
-                                <h4 class="font-medium text-neutral-900">Telepon</h4>
-                                <p class="text-neutral-600">+62 21 1234 5678</p>
+                                <h3 class="font-bold text-gray-800 text-lg mb-2">Kontak Kami</h3>
+                                <p class="text-gray-600 mb-1">WhatsApp: 0812-3456-7890</p>
+                                <p class="text-gray-600">Email: info@grosirberkatibu.com</p>
                             </div>
                         </div>
-                        
-                        <div class="flex items-start space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <svg class="h-5 w-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
+                    </div>
+
+                    <!-- Hours Card -->
+                    <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xl flex-shrink-0">
+                                <i class="fas fa-clock"></i>
                             </div>
                             <div>
-                                <h4 class="font-medium text-neutral-900">Email</h4>
-                                <p class="text-neutral-600">info@grosirberkatibu.com</p>
+                                <h3 class="font-bold text-gray-800 text-lg mb-2">Jam Operasional</h3>
+                                <div class="flex justify-between gap-8 mb-1">
+                                    <span class="text-gray-600">Senin - Sabtu</span>
+                                    <span class="font-bold text-gray-800">07:00 - 17:45</span>
+                                </div>
+                                <div class="flex justify-between gap-8">
+                                    <span class="text-gray-600">Minggu</span>
+                                    <span class="font-bold text-red-500">Tutup</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Business Hours -->
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">Jam Operasional</h3>
-                    <div class="space-y-2">
-                        <div class="flex justify-between">
-                            <span class="text-neutral-600">Senin - Jumat</span>
-                            <span class="font-medium text-neutral-900">08:00 - 17:00</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-neutral-600">Sabtu</span>
-                            <span class="font-medium text-neutral-900">08:00 - 15:00</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-neutral-600">Minggu</span>
-                            <span class="font-medium text-neutral-900">Tutup</span>
+                <!-- Map Section -->
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-white">
+                    <div class="relative h-80 w-full">
+                        <iframe 
+                            src="https://maps.google.com/maps?width=100%25&height=600&hl=en&q=Grosir%20Berkat%20Ibu&t=&z=14&ie=UTF8&iwloc=B&output=embed" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy"
+                            class="absolute inset-0 grayscale hover:grayscale-0 transition-all duration-500"
+                            title="Lokasi Grosir Berkat Ibu"
+                        ></iframe>
+                        <!-- Overlay Label -->
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+                            <i class="fas fa-map-pin text-red-500 animate-bounce"></i>
+                            <span class="text-sm font-bold text-gray-800">Lokasi Kami</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Social Media -->
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">Media Sosial</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-blue-800 rounded-lg flex items-center justify-center text-white hover:bg-blue-900 transition-colors">
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center text-white hover:bg-pink-700 transition-colors">
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.746-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.012.001z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-fade-in-left { animation: fadeInLeft 0.8s ease-out; }
+    .animate-fade-in-right { animation: fadeInRight 0.8s ease-out 0.2s backwards; }
+</style>
 @endsection
