@@ -15,24 +15,24 @@ class ReportController extends Controller
     {
         $period = request('period', 'monthly');
         $year = request('year', date('Y'));
-        
+
         $revenue = $this->getRevenueData($period, $year);
-        // SQLite compatible: use strftime instead of MONTH()
+        // MySQL compatible: use YEAR() and MONTH()
         $customerGrowth = User::where('role', 'customer')
-                             ->whereRaw("strftime('%Y', created_at) = ?", [$year])
-                             ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, COUNT(*) as count")
-                             ->groupByRaw("strftime('%m', created_at)")
-                             ->get();
-        
+            ->whereRaw("YEAR(created_at) = ?", [$year])
+            ->selectRaw("MONTH(created_at) as month, COUNT(*) as count")
+            ->groupByRaw("MONTH(created_at)")
+            ->get();
+
         return view('owner.reports.index', compact('revenue', 'customerGrowth', 'period', 'year'));
     }
-    
+
     public function customerReport()
     {
         $customers = User::where('role', 'customer')
-                         ->withCount('orders')
-                         ->paginate(15);
-        
+            ->withCount('orders')
+            ->paginate(15);
+
         return view('owner.reports.customers', compact('customers'));
     }
 
@@ -48,16 +48,16 @@ class ReportController extends Controller
             ->get();
 
         $headers = [
-            "Content-type"        => "text/csv",
+            "Content-type" => "text/csv",
             "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
         ];
 
-        $callback = function() use ($orders) {
+        $callback = function () use ($orders) {
             $file = fopen('php://output', 'w');
-            
+
             // Header Kolom CSV
             fputcsv($file, ['No Invoice', 'Tanggal', 'Customer', 'Total Belanja', 'Status']);
 
@@ -77,7 +77,7 @@ class ReportController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
-    
+
     private function getRevenueData($period, $year)
     {
         $labels = [];
@@ -94,11 +94,11 @@ class ReportController extends Controller
             }
 
             // 2. Ambil Data Real dari Database (Hanya yang Completed)
-            // SQLite compatible: use strftime instead of MONTH()
+            // MySQL compatible: use YEAR() and MONTH()
             $data = Order::where('status', 'completed')
-                ->whereRaw("strftime('%Y', created_at) = ?", [$year])
-                ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, SUM(total_amount) as revenue, COUNT(*) as total_order")
-                ->groupByRaw("strftime('%m', created_at)")
+                ->whereRaw("YEAR(created_at) = ?", [$year])
+                ->selectRaw("MONTH(created_at) as month, SUM(total_amount) as revenue, COUNT(*) as total_order")
+                ->groupByRaw("MONTH(created_at)")
                 ->get();
 
             // 3. Timpa data kosong dengan data real
@@ -110,7 +110,7 @@ class ReportController extends Controller
             // Weekly logic (simplified)
             $startDate = Carbon::createFromDate($year, 1, 1);
             $endDate = Carbon::createFromDate($year, 12, 31);
-            
+
             for ($date = $startDate; $date <= $endDate; $date->addWeek()) {
                 $week = $date->weekOfYear;
                 $labels[] = "Week " . $week;
@@ -118,11 +118,11 @@ class ReportController extends Controller
                 $orders[$week] = 0;
             }
 
-            // SQLite compatible: use strftime instead of WEEK()
+            // MySQL compatible: use YEAR() and WEEK()
             $data = Order::where('status', 'completed')
-                ->whereRaw("strftime('%Y', created_at) = ?", [$year])
-                ->selectRaw("CAST(strftime('%W', created_at) AS INTEGER) as week, SUM(total_amount) as revenue, COUNT(*) as total_order")
-                ->groupByRaw("strftime('%W', created_at)")
+                ->whereRaw("YEAR(created_at) = ?", [$year])
+                ->selectRaw("WEEK(created_at) as week, SUM(total_amount) as revenue, COUNT(*) as total_order")
+                ->groupByRaw("WEEK(created_at)")
                 ->get();
 
             foreach ($data as $row) {
@@ -130,7 +130,7 @@ class ReportController extends Controller
                 $orders[$row->week] = (int) $row->total_order;
             }
         }
-        
+
         // Return array yang bersih dan urut untuk Chart.js
         return [
             'labels' => $labels,

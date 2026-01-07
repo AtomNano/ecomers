@@ -21,26 +21,26 @@ class RegisterController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
             'phone' => 'required|string',
-            'province' => 'required|string',
-            'city' => 'required|string',
-            'district' => 'required|string',
+            'province' => 'nullable|string',
+            'city' => 'nullable|string',
+            'district' => 'nullable|string',
             'address' => 'required|string',
         ]);
-        
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
-            'province' => $validated['province'],
-            'city' => $validated['city'],
-            'district' => $validated['district'],
+            'province' => $validated['province'] ?? null,
+            'city' => $validated['city'] ?? null,
+            'district' => $validated['district'] ?? null,
             'address' => $validated['address'],
             'role' => 'customer',
             'password' => bcrypt($validated['password']),
         ]);
-        
+
         Auth::login($user);
-        
+
         return redirect()->route('customer.dashboard')->with('success', 'Registrasi berhasil!');
     }
 }
