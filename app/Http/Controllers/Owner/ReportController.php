@@ -17,11 +17,11 @@ class ReportController extends Controller
         $year = request('year', date('Y'));
         
         $revenue = $this->getRevenueData($period, $year);
-        // SQLite compatible: use strftime instead of MONTH()
+        $parts = $this->dateParts();
         $customerGrowth = User::where('role', 'customer')
-                             ->whereRaw("strftime('%Y', created_at) = ?", [$year])
-                             ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, COUNT(*) as count")
-                             ->groupByRaw("strftime('%m', created_at)")
+                             ->whereRaw("{$parts['year']} = ?", [$year])
+                             ->selectRaw("CAST({$parts['month']} AS {$parts['cast']}) as month, COUNT(*) as count")
+                             ->groupByRaw($parts['month'])
                              ->get();
         
         return view('owner.reports.index', compact('revenue', 'customerGrowth', 'period', 'year'));
@@ -94,11 +94,11 @@ class ReportController extends Controller
             }
 
             // 2. Ambil Data Real dari Database (Hanya yang Completed)
-            // SQLite compatible: use strftime instead of MONTH()
+            $parts = $this->dateParts();
             $data = Order::where('status', 'completed')
-                ->whereRaw("strftime('%Y', created_at) = ?", [$year])
-                ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, SUM(total_amount) as revenue, COUNT(*) as total_order")
-                ->groupByRaw("strftime('%m', created_at)")
+                ->whereRaw("{$parts['year']} = ?", [$year])
+                ->selectRaw("CAST({$parts['month']} AS {$parts['cast']}) as month, SUM(total_amount) as revenue, COUNT(*) as total_order")
+                ->groupByRaw($parts['month'])
                 ->get();
 
             // 3. Timpa data kosong dengan data real
@@ -118,11 +118,11 @@ class ReportController extends Controller
                 $orders[$week] = 0;
             }
 
-            // SQLite compatible: use strftime instead of WEEK()
+            $parts = $this->dateParts();
             $data = Order::where('status', 'completed')
-                ->whereRaw("strftime('%Y', created_at) = ?", [$year])
-                ->selectRaw("CAST(strftime('%W', created_at) AS INTEGER) as week, SUM(total_amount) as revenue, COUNT(*) as total_order")
-                ->groupByRaw("strftime('%W', created_at)")
+                ->whereRaw("{$parts['year']} = ?", [$year])
+                ->selectRaw("CAST({$parts['week']} AS {$parts['cast']}) as week, SUM(total_amount) as revenue, COUNT(*) as total_order")
+                ->groupByRaw($parts['week'])
                 ->get();
 
             foreach ($data as $row) {
@@ -137,6 +137,28 @@ class ReportController extends Controller
             'revenue_data' => array_values($revenues),
             'order_data' => array_values($orders),
             'total_revenue' => array_sum($revenues)
+        ];
+    }
+
+    private function dateParts(): array
+    {
+        $connection = Order::query()->getModel()->getConnection();
+        $driver = $connection->getDriverName();
+
+        if ($driver === 'sqlite') {
+            return [
+                'year' => "strftime('%Y', created_at)",
+                'month' => "strftime('%m', created_at)",
+                'week' => "strftime('%W', created_at)",
+                'cast' => 'INTEGER',
+            ];
+        }
+
+        return [
+            'year' => 'YEAR(created_at)',
+            'month' => 'MONTH(created_at)',
+            'week' => 'WEEK(created_at, 1)',
+            'cast' => 'UNSIGNED',
         ];
     }
 }
