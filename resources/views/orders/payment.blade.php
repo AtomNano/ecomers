@@ -20,37 +20,55 @@
 
         <!-- Bank Account & QRIS Section -->
         <div class="p-6 space-y-6">
-            <!-- Bank Information -->
-            @if(isset($storeSetting->bank_name) && isset($storeSetting->bank_account_number))
-                <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-blue-400 transition">
-                    <div class="flex items-center gap-3">
-                        <div class="h-10 w-12 bg-blue-600 rounded flex items-center justify-center">
-                            <span class="text-white font-bold text-lg"><i class="fas fa-university"></i></span>
+            <!-- Jika User Pilih Transfer Manual / QRIS Manual -->
+            @if(in_array($order->payment->payment_method ?? '', ['transfer', 'qris']))
+                
+                <!-- Bank Information -->
+                @if(isset($storeSetting->bank_name) && isset($storeSetting->bank_account_number))
+                    <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-blue-400 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-12 bg-blue-600 rounded flex items-center justify-center">
+                                <span class="text-white font-bold text-lg"><i class="fas fa-university"></i></span>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500">{{ $storeSetting->bank_name }}</div>
+                                <div class="font-bold text-gray-800 tracking-wider text-lg" id="rek-bca">{{ $storeSetting->bank_account_number }}</div>
+                                <div class="text-xs text-gray-400">a.n {{ $storeSetting->bank_account_holder }}</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="text-xs text-gray-500">{{ $storeSetting->bank_name }}</div>
-                            <div class="font-bold text-gray-800 tracking-wider text-lg" id="rek-bca">{{ $storeSetting->bank_account_number }}</div>
-                            <div class="text-xs text-gray-400">a.n {{ $storeSetting->bank_account_holder }}</div>
+                        <button onclick="copyToClipboard('rek-bca')" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition font-medium">
+                            <i class="far fa-copy"></i> Salin
+                        </button>
+                    </div>
+                @endif
+    
+                <!-- QRIS Section -->
+                @if(isset($storeSetting->qris_image))
+                    <div class="text-center pt-4 border-t border-gray-100">
+                        <p class="text-sm font-semibold text-gray-700 mb-3">Atau Scan QRIS (Manual)</p>
+                        <div class="bg-gray-50 rounded-xl p-3 inline-block border border-gray-200 shadow-sm">
+                            <img src="{{ asset('storage/' . $storeSetting->qris_image) }}" class="max-w-[250px] rounded-lg" alt="QRIS Code">
                         </div>
+                        <p class="text-xs text-gray-500 mt-2">Upload bukti bayar setelah scan.</p>
                     </div>
-                    <button onclick="copyToClipboard('rek-bca')" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition font-medium">
-                        <i class="far fa-copy"></i> Salin
-                    </button>
-                </div>
-            @endif
-
-            <!-- QRIS Section -->
-            @if(isset($storeSetting->qris_image))
-                <div class="text-center pt-4 border-t border-gray-100">
-                    <p class="text-sm font-semibold text-gray-700 mb-3">Atau Scan QRIS Kami</p>
-                    <div class="bg-gray-50 rounded-xl p-3 inline-block border border-gray-200 shadow-sm">
-                        <img src="{{ asset('storage/' . $storeSetting->qris_image) }}" class="max-w-[250px] rounded-lg" alt="QRIS Code">
+                @endif
+            
+            @elseif($order->payment->payment_method === 'midtrans')
+                <!-- Jika User Pilih Otomatis (Midtrans) -->
+                @if($order->snap_token)
+                    <div class="text-center py-4">
+                        <p class="text-gray-700 mb-4">Silakan klik tombol di bawah untuk menyelesaikan pembayaran secara otomatis.</p>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2">Dukung semua E-Wallet & Mobile Banking via QRIS</p>
-                </div>
+                @else
+                    <div class="text-center py-4 bg-red-50 rounded-lg border border-red-200">
+                        <p class="text-red-700 font-bold mb-2"><i class="fas fa-exclamation-circle"></i> Gagal Memuat Tombol Pembayaran</p>
+                        <p class="text-sm text-red-600">Sistem pembayaran otomatis belum siap atau terjadi kesalahan konfigurasi.</p>
+                        <p class="text-xs text-gray-500 mt-2">Silakan hubungi admin atau gunakan metode Transfer Manual.</p>
+                    </div>
+                @endif
             @endif
             
-            @if(!isset($storeSetting->bank_name) && !isset($storeSetting->qris_image))
+            @if(!isset($storeSetting->bank_name) && !isset($storeSetting->qris_image) && ($order->payment->payment_method ?? '') != 'midtrans')
                 <div class="text-center p-6 bg-yellow-50 text-yellow-700 rounded-xl border border-yellow-200 text-sm">
                     <i class="fas fa-exclamation-triangle text-xl mb-2 block"></i>
                     Informasi pembayaran belum diatur oleh admin. Silakan hubungi WA admin.
@@ -59,9 +77,22 @@
         </div>
     </div>
 
-    <!-- Payment Proof Upload Card -->
+    <!-- Midtrans Payment Section -->
+    @if($order->snap_token && $order->status == 'pending' && ($order->payment->payment_method ?? '') === 'midtrans')
+    <div class="bg-indigo-50 rounded-xl shadow-lg p-6 border border-indigo-200 mb-6 text-center">
+        <h3 class="font-bold text-indigo-900 mb-2 text-lg">Pembayaran Otomatis</h3>
+        <p class="text-sm text-indigo-700 mb-4">Bayar instan dengan Virtual Account, GoPay, ShopeePay, atau Kartu Kredit.</p>
+        
+        <button id="pay-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105">
+            💳 Bayar Sekarang
+        </button>
+    </div>
+    @endif
+
+    <!-- Payment Proof Upload Card (Manual Fallback / Primary for Manual) -->
+    @if(in_array($order->payment->payment_method ?? '', ['transfer', 'qris']))
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-        <h3 class="font-bold text-gray-800 mb-4 text-lg">Konfirmasi Pembayaran</h3>
+        <h3 class="font-bold text-gray-800 mb-4 text-lg">Konfirmasi Manual (Transfer Bank / QRIS Manual)</h3>
         
         <form action="{{ route('orders.upload', $order->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -107,9 +138,40 @@
             </p>
         </div>
     </div>
+    @endif
 </div>
 
+<!-- Form untuk redirect setelah sukses -->
+<form id="midtrans-callback-form" action="{{ route('orders.success', $order->invoice_number) }}" method="GET" style="display: none;">
+</form>
+
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <script>
+    // Midtrans Logic
+    const payButton = document.getElementById('pay-button');
+    if(payButton) {
+        payButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            snap.pay('{{ $order->snap_token }}', {
+                onSuccess: function(result){
+                    document.getElementById('midtrans-callback-form').submit();
+                },
+                onPending: function(result){
+                    alert("Menunggu pembayaran!");
+                    location.reload();
+                },
+                onError: function(result){
+                    alert("Pembayaran gagal!");
+                    location.reload();
+                },
+                onClose: function(){
+                    alert('Anda menutup popup tanpa menyelesaikan pembayaran');
+                }
+            });
+        });
+    }
+
     // Fitur Copy to Clipboard
     function copyToClipboard(elementId) {
         const text = document.getElementById(elementId).innerText;
@@ -134,37 +196,39 @@
     const placeholderText = document.getElementById('placeholder-text');
     const dropzone = document.getElementById('dropzone');
 
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                previewContainer.classList.remove('hidden');
-                placeholderText.classList.add('hidden');
+    if(fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.classList.remove('hidden');
+                    placeholderText.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(file);
-        }
-    });
+        });
 
-    // Drag and drop support
-    dropzone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropzone.classList.add('border-blue-400', 'bg-blue-50');
-    });
+        // Drag and drop support
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-blue-400', 'bg-blue-50');
+        });
 
-    dropzone.addEventListener('dragleave', () => {
-        dropzone.classList.remove('border-blue-400', 'bg-blue-50');
-    });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-blue-400', 'bg-blue-50');
+        });
 
-    dropzone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropzone.classList.remove('border-blue-400', 'bg-blue-50');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            fileInput.files = files;
-            fileInput.dispatchEvent(new Event('change'));
-        }
-    });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-blue-400', 'bg-blue-50');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        });
+    }
 </script>
 @endsection

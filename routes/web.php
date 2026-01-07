@@ -51,6 +51,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 Route::get('/orders/{invoice_number}/payment', [OrderController::class, 'showPayment'])->name('orders.payment')->where('invoice_number', '.*');
 Route::post('/orders/{id}/upload-proof', [OrderController::class, 'uploadProof'])->name('orders.upload');
 Route::get('/orders/{invoice_number}/success', [OrderController::class, 'showSuccess'])->name('orders.success')->where('invoice_number', '.*');
+// Midtrans Webhook
+Route::post('/midtrans/callback', [\App\Http\Controllers\Customer\MidtransController::class, 'notificationHandler'])->name('midtrans.callback');
 
 // Customer Routes
 Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
