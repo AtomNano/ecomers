@@ -76,16 +76,8 @@ class OrderController extends Controller
                 return back()->with('error', 'Order ini sudah diproses sebelumnya.');
             }
 
-            // 1. Kurangi Stok dengan lockForUpdate untuk mencegah race condition
-            foreach ($order->items as $item) {
-                $product = Product::lockForUpdate()->findOrFail($item->product_id);
-
-                if ($product->stock < $item->quantity) {
-                    throw new \Exception("Stok untuk {$product->name} tidak cukup! Sisa: {$product->stock}, Diminta: {$item->quantity}");
-                }
-
-                $product->decrement('stock', $item->quantity);
-            }
+            // 1. (REMOVED) Stock deduction moved to CheckoutController to prevent race conditions at source
+            // Stock is already deducted when Order is created in CheckoutController@store
 
             // 2. Update payment status
             $order->payment->update(['status' => 'verified']);
@@ -96,7 +88,7 @@ class OrderController extends Controller
             DB::commit();
 
             return redirect()->route('admin.orders.show', $order->id)
-                ->with('success', 'Pembayaran diverifikasi. Stok berkurang. Silakan proses pengiriman.');
+                ->with('success', 'Pembayaran diverifikasi. Status pesanan diperbarui.');
 
         } catch (\Exception $e) {
             DB::rollBack();

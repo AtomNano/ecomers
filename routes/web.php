@@ -31,18 +31,24 @@ Route::get('/products/{product}', [CustomerProductController::class, 'publicShow
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    
+
     Route::get('/register', [RegisterController::class, 'showRegister'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
-    
+
     Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->name('forgot-password');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendReset'])->name('forgot-password-send');
     Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showReset'])->name('reset-password');
     Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('reset-password-submit');
-    
+
     // Google OAuth Routes
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
@@ -59,23 +65,23 @@ Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
     Route::get('/dashboard', [CustomerHomeController::class, 'dashboard'])->name('customer.dashboard');
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.products.index');
     Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.products.show');
-    
+
     // Cart Routes
     Route::post('/cart/{product}', [CartController::class, 'add'])->name('customer.cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('customer.cart.index');
     Route::put('/cart/{cart}', [CartController::class, 'update'])->name('customer.cart.update');
     Route::delete('/cart/{cart}', [CartController::class, 'remove'])->name('customer.cart.remove');
     Route::delete('/cart-clear', [CartController::class, 'clear'])->name('customer.cart.clear');
-    
+
     // Checkout Routes
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('customer.checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('customer.checkout.store');
-    
+
     // Payment Routes
     Route::get('/payment/{payment}', [PaymentController::class, 'show'])->name('customer.payment.show');
     Route::post('/payment/{payment}/upload', [PaymentController::class, 'uploadProof'])->name('customer.payment.uploadProof');
     Route::get('/payment/{payment}/status', [PaymentController::class, 'status'])->name('customer.payment.status');
-    
+
     // Order History
     Route::get('/orders', [CustomerHomeController::class, 'orders'])->name('customer.orders');
 });
@@ -83,7 +89,7 @@ Route::middleware(['auth', 'customer'])->prefix('customer')->group(function () {
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    
+
     // Product Management
     Route::get('/products', [AdminProductController::class, 'index'])->name('admin.products.index');
     Route::get('/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
@@ -92,7 +98,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('admin.products.edit');
     Route::put('/products/{product}', [AdminProductController::class, 'update'])->name('admin.products.update');
     Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
-    
+
     // Order Management
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
@@ -101,7 +107,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('admin.orders.reject');
     Route::post('/orders/{order}/ship', [OrderController::class, 'ship'])->name('admin.orders.ship');
     Route::post('/orders/{order}/complete', [OrderController::class, 'complete'])->name('admin.orders.complete');
-    
+
     // Financial Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('admin.reports.index');
     Route::get('/reports/financial', [ReportController::class, 'financialReport'])->name('admin.reports.financial');
@@ -110,7 +116,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 // Owner Routes
 Route::middleware(['auth', 'owner'])->prefix('owner')->group(function () {
     Route::get('/', [OwnerDashboardController::class, 'index'])->name('owner.dashboard');
-    
+
     // Customer Management
     Route::get('/customers', [CustomerController::class, 'index'])->name('owner.customers.index');
     Route::get('/customers/create', [CustomerController::class, 'create'])->name('owner.customers.create');
@@ -118,7 +124,7 @@ Route::middleware(['auth', 'owner'])->prefix('owner')->group(function () {
     Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('owner.customers.edit');
     Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('owner.customers.update');
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('owner.customers.destroy');
-    
+
     // Reports
     Route::get('/reports', [OwnerReportController::class, 'index'])->name('owner.reports.index');
     Route::get('/reports/export', [OwnerReportController::class, 'exportCsv'])->name('owner.reports.export');

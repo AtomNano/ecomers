@@ -244,6 +244,11 @@
                                  x-transition:leave-start="transform opacity-100 scale-100"
                                  x-transition:leave-end="transform opacity-0 scale-95"
                                  class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+                                @if(auth()->user()->role === 'owner')
+                                <a href="{{ route('owner.settings.edit') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                    <i class="fas fa-cog w-4"></i> Pengaturan Toko
+                                </a>
+                                @endif
                                 <a href="{{ route('home') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                                     <i class="fas fa-store w-4"></i> Lihat Toko
                                 </a>

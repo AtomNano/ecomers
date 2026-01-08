@@ -12,17 +12,17 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::with('category');
-        
+
         // Search filter
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
-        
+
         // Category filter
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
-        
+
         // Stock filter
         if ($request->filled('stock')) {
             if ($request->stock === 'low') {
@@ -33,19 +33,19 @@ class ProductController extends Controller
                 $query->where('stock', '>', 50);
             }
         }
-        
+
         $products = $query->orderBy('name')->paginate(12)->withQueryString();
         $categories = Category::all();
-        
+
         return view('admin.products.index', compact('products', 'categories'));
     }
-    
+
     public function create()
     {
         $categories = Category::all();
         return view('admin.products.create', compact('categories'));
     }
-    
+
     public function store(Request $request)
     {
         // Validasi input dengan strict rules untuk pricing
@@ -53,22 +53,23 @@ class ProductController extends Controller
             'name' => 'required|string|max:255|unique:products',
             'description' => 'required|string|min:10',
             'category_id' => 'required|exists:categories,id',
-            
+
             // Tiered Pricing - semua required, tapi tidak enforce unit > bulk > dozen
             // (User bebas set harga, sistem akan otomatis pilih termurah)
-            'price_unit' => 'required|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
-            'price_bulk_4' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
-            'price_dozen' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
-            
+            // Tiered Pricing
+            'price_unit' => 'required|numeric|min:100|max:9999999999999',
+            'price_bulk_4' => 'nullable|numeric|min:100|max:9999999999999',
+            'price_dozen' => 'nullable|numeric|min:100|max:9999999999999',
+
             // Flexible quantity settings
             'bulk_min_qty' => 'nullable|integer|min:2|max:100',
             'box_item_count' => 'nullable|integer|min:2|max:999',
-            
+
             // Stock management
             'stock' => 'required|integer|min:0',
             'unit' => 'nullable|string|max:50',
             'is_featured' => 'nullable|boolean',
-            
+
             // Image upload - max 2MB
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ], [
@@ -84,7 +85,7 @@ class ProductController extends Controller
         $validated['bulk_min_qty'] = $validated['bulk_min_qty'] ?? 4;
         $validated['box_item_count'] = $validated['box_item_count'] ?? 12;
         $validated['is_featured'] = $validated['is_featured'] ?? false;
-        
+
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image if exists
@@ -93,11 +94,11 @@ class ProductController extends Controller
             }
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
-        
+
         Product::create($validated);
-        
+
         return redirect()->route('admin.products.index')
-                        ->with('success', 'Produk berhasil ditambahkan');
+            ->with('success', 'Produk berhasil ditambahkan');
     }
 
     public function show(Product $product)
@@ -119,21 +120,22 @@ class ProductController extends Controller
             'name' => 'required|string|max:255|unique:products,name,' . $product->id,
             'description' => 'required|string|min:10',
             'category_id' => 'required|exists:categories,id',
-            
+
             // Tiered Pricing
-            'price_unit' => 'required|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
-            'price_bulk_4' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
-            'price_dozen' => 'nullable|numeric|min:100|regex:/^\d+(\.\d{1,2})?$/',
-            
+            // Tiered Pricing
+            'price_unit' => 'required|numeric|min:100|max:9999999999999',
+            'price_bulk_4' => 'nullable|numeric|min:100|max:9999999999999',
+            'price_dozen' => 'nullable|numeric|min:100|max:9999999999999',
+
             // Flexible quantity settings
             'bulk_min_qty' => 'nullable|integer|min:2|max:100',
             'box_item_count' => 'nullable|integer|min:2|max:999',
-            
+
             // Stock management
             'stock' => 'required|integer|min:0',
             'unit' => 'nullable|string|max:50',
             'is_featured' => 'nullable|boolean',
-            
+
             // Image - optional untuk update
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ], [
@@ -148,7 +150,7 @@ class ProductController extends Controller
         $validated['bulk_min_qty'] = $validated['bulk_min_qty'] ?? 4;
         $validated['box_item_count'] = $validated['box_item_count'] ?? 12;
         $validated['is_featured'] = $validated['is_featured'] ?? false;
-        
+
         // Handle image update
         if ($request->hasFile('image')) {
             // Delete old image
@@ -157,24 +159,24 @@ class ProductController extends Controller
             }
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
-        
+
         $product->update($validated);
-        
+
         return redirect()->route('admin.products.index')
-                        ->with('success', 'Produk berhasil diperbarui');
+            ->with('success', 'Produk berhasil diperbarui');
     }
-    
+
     public function destroy(Product $product)
     {
         // Check if product has been ordered
         if ($product->orderItems()->exists()) {
             return redirect()->route('admin.products.index')
-                            ->with('error', 'Tidak bisa menghapus produk ini. Produk sudah pernah diorder. Silakan ubah statusnya menjadi tidak aktif (uncheck Featured) untuk menyembunyikannya.');
+                ->with('error', 'Tidak bisa menghapus produk ini. Produk sudah pernah diorder. Silakan ubah statusnya menjadi tidak aktif (uncheck Featured) untuk menyembunyikannya.');
         }
-        
+
         $product->delete();
-        
+
         return redirect()->route('admin.products.index')
-                        ->with('success', 'Produk berhasil dihapus');
+            ->with('success', 'Produk berhasil dihapus');
     }
 }
